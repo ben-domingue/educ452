@@ -1,23 +1,25 @@
 load("star_df.Rdata")
 
 std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
-df$g3treadss<-std(df$g3treadss)
-df$g3tmathss<-std(df$g3tmathss)
+df$g1treadss<-std(df$g1treadss)
+df$g1tmathss<-std(df$g1tmathss)
 
-mod<-lm(g3treadss~g3classtype+gender+race+factor(g3schid),df[df$g3classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
+mod<-lm(g1treadss~g1classtype+gender+race+factor(g1schid),df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
 summary(mod)$coef[1:5,]
 ##                          Estimate Std. Error t value Pr(>|t|)
-## (Intercept)                -0.094      0.155   -0.61  5.4e-01
-## g3classtypeREGULAR CLASS   -0.209      0.032   -6.61  4.3e-11
-## genderFEMALE                0.187      0.030    6.16  8.2e-10
-## raceBLACK                  -0.397      0.061   -6.50  9.4e-11
-## raceASIAN                   0.352      0.269    1.31  1.9e-01
+## (Intercept)                -0.396      0.137   -2.89  3.8e-03
+## g1classtypeREGULAR CLASS   -0.278      0.028   -9.97  3.7e-23
+## genderFEMALE                0.199      0.027    7.31  3.2e-13
+## raceBLACK                  -0.314      0.052   -6.07  1.4e-09
+## raceASIAN                   0.078      0.232    0.33  7.4e-01
+##compare to 0.23 in table 5 of finn & achilles
 
-mod<-lm(g3tmathss~g3classtype+gender+race+factor(g3schid),df[df$g3classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
+mod<-lm(g1tmathss~g1classtype+gender+race+factor(g1schid),df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
 summary(mod)$coef[1:5,]
 ##                          Estimate Std. Error t value Pr(>|t|)
-## (Intercept)               -0.1971      0.150   -1.31  1.9e-01
-## g3classtypeREGULAR CLASS  -0.1610      0.031   -5.27  1.4e-07
-## genderFEMALE              -0.0062      0.029   -0.21  8.3e-01
-## raceBLACK                 -0.4283      0.059   -7.21  6.8e-13
-## raceASIAN                  0.4549      0.261    1.74  8.1e-02
+## (Intercept)               -0.3135      0.135   -2.32  2.0e-02
+## g1classtypeREGULAR CLASS  -0.2942      0.027  -10.83  5.4e-27
+## genderFEMALE              -0.0086      0.026   -0.33  7.4e-01
+## raceBLACK                 -0.5572      0.050  -11.05  5.0e-28
+## raceASIAN                 -0.1272      0.228   -0.56  5.8e-01
+##compare to 0.27 in table 5 of finn & achilles
