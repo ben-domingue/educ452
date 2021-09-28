@@ -23,3 +23,6 @@ summary(mod)$coef[1:5,]
 ## raceBLACK                 -0.5572      0.050  -11.05  5.0e-28
 ## raceASIAN                 -0.1272      0.228   -0.56  5.8e-01
 ##compare to 0.27 in table 5 of finn & achilles
+
+
+##What are the differences betwen how we're choosing to analyze things versus the approach in F&A?

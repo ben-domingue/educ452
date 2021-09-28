@@ -29,12 +29,17 @@ sim<-function(df) { #this is going to automate what we saw in 02
 df$small<-ifelse(df$g1classtype=="SMALL CLASS",1,0)
 mod<-lm(g1treadss~small+factor(g1schid),df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
 co<-coef(mod)[2]
+se<-summary(mod)$coef[2,2]
 est<-numeric()
+##We're going to show variation in the estimate as a function of sampling variation by simulating 100 datasets.
 for (i in 1:100) {
     df.tmp<-sim(df)
     df.tmp$small<-ifelse(df.tmp$g1classtype=="SMALL CLASS",1,0)
     mod<-lm(g1treadss~small+factor(g1schid),df.tmp[df.tmp$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
     est[i]<-coef(mod)[2]
 }
-plot(density(est))
-abline(v=co)
+plot(density(est),lwd=2,col='red',xlim=c(0,.5))
+abline(v=co,lwd=2)
+segments(est-1.96*se,0,est+1.96*se,0,lwd=2)
+##How does the parametric estimate of the SE compare to the variation we observe over estimates from simulated data?
+
