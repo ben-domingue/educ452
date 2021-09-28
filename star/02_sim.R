@@ -36,8 +36,3 @@ summary(mod)$coef[1:2,]
 mod<-lm(g1treadss~g1classtype+factor(g1schid),df0[df0$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
 summary(mod)$coef[1:2,]
 
-
-##what's missing, could be explored
-#bootstrap?
-#no correlations between DVs
-#skew

@@ -38,8 +38,3 @@ for (i in 1:100) {
 }
 plot(density(est))
 abline(v=co)
-
-##what's missing, could be explored
-#bootstrap?
-#no correlations between DVs
-#skew
