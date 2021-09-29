@@ -39,4 +39,3 @@ s<-summary(mod2)$coef
 s[!grepl("^factor",rownames(s)),]
 
 
-##importance of clustered SEs: simulate with/without accounting for classroom structure
