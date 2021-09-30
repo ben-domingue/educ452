@@ -3,7 +3,7 @@ df<-read.spss("STAR_Students.sav",to.data.frame=TRUE)
 names(df)<-tolower(names(df))
 
 nms<-c("stdntid", "gender", "race", "birthyear", "flagsg1", "g1classtype", 
-"g1freelunch", "g1treadss", "g1tmathss","g1schid","g1surban")
+"g1freelunch", "g1treadss", "g1tmathss","g1schid","g1surban","g1classsize")
 df<-df[,nms]
 
 df<-df[df$flagsg1=="YES",]
