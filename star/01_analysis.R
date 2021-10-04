@@ -4,6 +4,12 @@ std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
 df$g1treadss<-std(df$g1treadss)
 df$g1tmathss<-std(df$g1tmathss)
 
+by(df$g1treadss,df$g1classtype,mean,na.rm=TRUE)
+es0<-mean(df$g1treadss[df$g1classtype=="SMALL CLASS"],na.rm=TRUE)-mean(df$g1treadss[df$g1classtype=="REGULAR CLASS"],na.rm=TRUE)/sd(df$g1treadss[df$g1classtype=="REGULAR CLASS"],na.rm=TRUE)
+
+mod<-lm(g1treadss~g1classtype+factor(g1schid),df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
+summary(mod)$coef[1:5,]
+
 mod<-lm(g1treadss~g1classtype+gender+race+factor(g1schid),df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
 summary(mod)$coef[1:5,]
 ##                          Estimate Std. Error t value Pr(>|t|)
@@ -14,6 +20,7 @@ summary(mod)$coef[1:5,]
 ## raceASIAN                   0.078      0.232    0.33  7.4e-01
 ##compare to 0.23 in table 5 of finn & achilles
 
+################################################################
 mod<-lm(g1tmathss~g1classtype+gender+race+factor(g1schid),df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
 summary(mod)$coef[1:5,]
 ##                          Estimate Std. Error t value Pr(>|t|)
