@@ -74,3 +74,5 @@ ratio.sd(df0)
 ratio.sd(df)
 
 ##What is the effect [could show that standard errors are too conservative?]
+
+##Could come up with some mechanism for assigning students to schools?
