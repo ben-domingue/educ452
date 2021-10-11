@@ -60,7 +60,7 @@ sim2<-function(df,mu) { #this is going to automate what we saw in 02
     df$g1treadss<-rnorm(N,mean=mean.class[class],sd=1)
     ##add school offset
     df<-merge(df,mu)
-    df$g1treadss<-df$g1treadss+df$mu
+    df$g1treadss<-df$g1treadss+df$mu #perhaps note here that since mu is indep of anything we could use random effects models?
     ##
     df
 }
