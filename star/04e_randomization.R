@@ -1,9 +1,22 @@
+##our bootstrap analysis in 03 allowed us to see variation in point estimate given the [latent] DGM [that we replicate via resampling]
+##now! we're going to look at variation in point estimates given a different DGM. in particular, we're going to ensure that there is no effect of class size by randomizing outcomes
+
 load("star_df.Rdata")
 
 std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
 df$g1treadss<-std(df$g1treadss)
 df$g1tmathss<-std(df$g1tmathss)
 
+randomize<-function(df) {
+    df$g1treadss<-sample(df$g1treadss)
+    df
+}
+
+randomize.school<-function(df) { ##why this?
+    L<-split(df,df$g1schid)
+    L<-lapply(L,randomize)
+    data.frame(do.call("rbind",L))
+}
 
 sim<-function(df) { #this is going to automate what we saw in 02
     ##params to use
@@ -22,7 +35,7 @@ sim<-function(df) { #this is going to automate what we saw in 02
     class<-apply(class,2,which.max)
     df$g1classtype<-names(pr.class)[class]
     #scores
-    df$g1treadss<-rnorm(N,mean=mean.class[class],sd=1)
+    df$g1treadss<-rnorm(N,mean=0,sd=1)
     df
 }
 
@@ -30,16 +43,28 @@ df$small<-ifelse(df$g1classtype=="SMALL CLASS",1,0)
 mod<-lm(g1treadss~small+factor(g1schid),df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
 co<-coef(mod)[2]
 se<-summary(mod)$coef[2,2]
-est<-numeric()
+est.noeffect<-est.randomize<-est.randomizeschool<-numeric()
 ##We're going to show variation in the estimate as a function of sampling variation by simulating 100 datasets.
-for (i in 1:500) {
+for (i in 1:100) {
     df.tmp<-sim(df)
     df.tmp$small<-ifelse(df.tmp$g1classtype=="SMALL CLASS",1,0)
     mod<-lm(g1treadss~small+factor(g1schid),df.tmp[df.tmp$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
-    est[i]<-coef(mod)[2]
+    est.noeffect[i]<-coef(mod)[2]
+    ##
+    df.tmp<-randomize(df)
+    df.tmp$small<-ifelse(df.tmp$g1classtype=="SMALL CLASS",1,0)
+    mod<-lm(g1treadss~small+factor(g1schid),df.tmp[df.tmp$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
+    est.randomize[i]<-coef(mod)[2]
+    ##
+    df.tmp<-randomize.school(df)
+    df.tmp$small<-ifelse(df.tmp$g1classtype=="SMALL CLASS",1,0)
+    mod<-lm(g1treadss~small+factor(g1schid),df.tmp[df.tmp$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
+    est.randomizeschool[i]<-coef(mod)[2]
 }
-plot(density(est),lwd=2,col='red',xlim=c(0,.5))
-abline(v=co,lwd=2)
-segments(est-1.96*se,0,est+1.96*se,0,lwd=2)
-##How does the parametric estimate of the SE compare to the variation we observe over estimates from simulated data?
+
+plot(density(est.randomize),lwd=2,col='red',xlim=c(-.5,.5))
+lines(density(est.noeffect),lwd=2,col='gray')
+lines(density(est.randomizeschool),lwd=2,col='red',lty=2)
+abline(v=co,lwd=2,col='blue')
+segments(est-1.96*se,0,est+1.96*se,0,lwd=2,col='blue')
 
