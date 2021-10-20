@@ -21,7 +21,15 @@ plot(NULL,ylim=c(0,0.1),xlim=range(x[,2]),xlab='p',ylab='mse')
 for (i in 1:length(L)) lines(L[[i]][,-1],lwd=2,col=cols[i])
 
 ##the binomial distribution
-
+ntrial<-15
+x<-rbinom(10000,ntrial,.5)
+y<-numeric()
+for (i in 1:10000) {
+    z<-numeric()
+    for (j in 1:ntrial) z[j]<-rbinom(1,1,.5)
+    y[i]<-sum(z)
+}
+plot(as.numeric(table(x)),as.numeric(table(y))); abline(0,1)
 
 ##the CLT, https://en.wikipedia.org/wiki/Central_limit_theorem
 #Which is relevant, N or n, in terms of having the CLT apply?
