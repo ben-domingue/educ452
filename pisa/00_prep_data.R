@@ -47,59 +47,44 @@ dat<-read.spss("CY07_MSU_STU_COG.sav",
               )
 options(warn=1)
 
-index<-sample(1:nrow(dat),50000)
-dat<-dat[index,]
+#index<-sample(1:nrow(dat),50000)
+#dat<-dat[index,]
 
 toc<-c(math="pisa_ms_cog_overall_math_compendium_TOC.csv")#,read="pisa_ms_cog_overall_read_compendium_TOC.csv")
-for (iii in 1:length(toc) ) {
-    dat->x
-    it<-read.csv(toc[iii],header=FALSE)
-    index<-grep("Scored Response",it[,2])
-    items<-it[index,1]
-    print(length(items))
+iii<-1
+dat->x
+it<-read.csv(toc[iii],header=FALSE)
+index<-grep("Scored Response",it[,2])
+items<-it[index,1]
+print(length(items))
 
-    resp<-x[,items]
-    nn<-apply(resp,2,function(x) length(unique(x[!is.na(x)])))
-    resp<-resp[,nn==2]
+resp<-x[,items]
+nn<-apply(resp,2,function(x) length(unique(x[!is.na(x)])))
+resp<-resp[,nn==2]
 
-    nms<-names(resp)
-    for (i in 1:length(nms)) {
-        nm<-nms[i]
-        n<-nchar(nm)
-        nm<-substr(nm,1,n-1)
-        nms[i]<-nm
-    }
-    nms2<-paste(nms,"T",sep="")
-    test<-nms2 %in% names(x)
-    resp<-resp[,test]
-    ## rt<-x[,nms2[test]]
-
-    ## for (i in 1:ncol(rt)) {
-    ##     z<-rt[,i]
-    ##     z<-as.numeric(z)
-    ##     z<-ifelse(z<=0,NA,z)
-    ##     log(z/1000)->rt[,i]
-    ## }
-
-    ##get rid of empty rows
-    rs<-rowSums(is.na(resp))
-    test<-rs<ncol(resp)
-    resp<-resp[test,]
-    ##rt<-rt[test,]
-    
-    
-    ##create long data
-    id<-1:nrow(resp)
-    item<-names(resp)
-    L<-list()
-    for (i in 1:ncol(resp)) {
-        L[[i]]<-data.frame(resp=resp[,i],id=id,item=item[i])
-    }
-    x<-data.frame(do.call("rbind",L))
-    
-    
-    rs<-rowSums(is.na(x))
-    x<-x[rs==0,]
-    
-    save(x,file=paste0("pisa2018",names(toc)[iii],"_df.Rdata"))
+nms<-names(resp)
+for (i in 1:length(nms)) {
+    nm<-nms[i]
+    n<-nchar(nm)
+    nm<-substr(nm,1,n-1)
+    nms[i]<-nm
 }
+nms2<-paste(nms,"T",sep="")
+test<-nms2 %in% names(x)
+resp<-resp[,test]
+
+
+##create long data
+id<-1:nrow(resp)
+item<-names(resp)
+L<-list()
+for (i in 1:ncol(resp)) {
+    L[[i]]<-data.frame(resp=resp[,i],id=id,item=item[i],country=dat$CNT)
+}
+x<-data.frame(do.call("rbind",L))
+
+
+df<-x[!is.na(x$resp),]
+
+save(df,file=paste0("pisa2018",names(toc)[iii],"_df.Rdata"))
+
