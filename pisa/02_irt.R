@@ -18,6 +18,8 @@ for (i in 1:length(L)) {
 
 resp<-data.frame(do.call("cbind",resp))
 
+#save(resp,file="/home/bd/Dropbox/stanford/classes/edu452-spring2022/pisa_resp.Rdata")
+
 dim(resp)
 hist(colMeans(resp,na.rm=TRUE))
 hist(rowMeans(resp,na.rm=TRUE))
