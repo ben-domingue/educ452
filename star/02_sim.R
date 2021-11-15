@@ -1,4 +1,4 @@
-load("star_df.Rdata")
+load("star_df.Rdata") #https://www.dropbox.com/s/pwmie785p1cljsw/star_df.Rdata?dl=0
 
 std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
 df$g1treadss<-std(df$g1treadss)

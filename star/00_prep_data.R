@@ -8,7 +8,7 @@ nms<-c("stdntid", "gender", "race", "birthyear", "flagsg1", "g1classtype",
 df<-df[,nms]
 
 df<-df[df$flagsg1=="YES",] ##only those students in star in grade 1
-save(df,file="star_df.Rdata")
+save(df,file="star_df.Rdata") #this is https://www.dropbox.com/s/pwmie785p1cljsw/star_df.Rdata?dl=0
 
 
 

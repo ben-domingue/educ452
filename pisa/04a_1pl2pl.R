@@ -1,4 +1,4 @@
-load("/tmp/pisa_resp.Rdata")
+load("pisa_resp.Rdata") #https://www.dropbox.com/s/07i1gmqk082ribt/pisa_resp.Rdata?dl=0
 
 library(mirt)
 index<-sample(1:nrow(resp),50000)

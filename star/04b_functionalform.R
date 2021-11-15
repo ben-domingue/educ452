@@ -1,7 +1,7 @@
 ##heterogeneous treatment fx
 ##There has been substantial interest in the idea of heterogeneous treatment fx, or the notion that different units may be differentially impacted by the treatment.
 ##Indeed, work with STAR has explored this idea: 
-load("star_df.Rdata") #on github, see data folder
+load("star_df.Rdata") #https://www.dropbox.com/s/pwmie785p1cljsw/star_df.Rdata?dl=0
 std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
 df$g1treadss<-std(df$g1treadss)
 df$g1tmathss<-std(df$g1tmathss)

@@ -1,7 +1,7 @@
 ##our bootstrap analysis in 03 allowed us to see variation in point estimate given the [latent] DGM [that we replicate via resampling]
 ##now! we're going to look at variation in point estimates given a different DGM. in particular, we're going to ensure that there is no effect of class size by randomizing outcomes
 
-load("star_df.Rdata")
+load("star_df.Rdata") #https://www.dropbox.com/s/pwmie785p1cljsw/star_df.Rdata?dl=0
 
 std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
 df$g1treadss<-std(df$g1treadss)
