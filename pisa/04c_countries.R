@@ -62,4 +62,4 @@ library(mirt)
 m <- multipleGroup(data.frame(rbind(g1,g2,g3)), 1, group = as.character(c(rep(1,nrow(g1)),rep(2,nrow(g2)),rep(3,nrow(g3)))),
                    invariance=c('slopes', 'intercepts','free_means','free_variances'))
 co<-coef(m)
-lapply(co,function(x) x[length(x)][[1]])
+lapply(co,function(x) x[length(x)][[1]]) #could perhaps double up with simpler versions wherein you don't estimate mirt models but just look at observed % correct?
