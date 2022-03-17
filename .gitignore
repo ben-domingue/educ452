@@ -1,2 +1,4 @@
+priv/*.R
+priv/*
 *.ign
 
