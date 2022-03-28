@@ -72,7 +72,7 @@ x<-rnorm(10000) #this will be the IV
 pr<-1/(1+exp(-1*(beta*x))) #the logistic transformation!
 y<-rbinom(length(x),1,pr)
 m<-glm(y~x,family="binomial")
-coef(m)[2] #explore this this output changes as you chance beta
+coef(m)[2] #explore how this output changes as you chance beta
 
 ##what if we flip is so that we have a binary predictor of a continuous outcome?
 beta<-1
