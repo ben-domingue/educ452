@@ -56,6 +56,6 @@ for (s2 in seq(0,2,by=.2)) {
     mat[[as.character(s2)]]<-c(var(x0)/var(x),mean(pow))
 }
 plot(do.call("rbind",mat),xlab="reliability of x",ylab="statistical power",pch=19,cex=2,ylim=c(0,1))
-abline(h=0.05,col='gray')
+abline(h=0.8,col='gray')
 ##as we might have anticipated, power is improved with more reliable measures!.
 ##you might again wonder how this is impacted by a range of choices we made along the way...
