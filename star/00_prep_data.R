@@ -8,8 +8,9 @@ nms<-c("stdntid", "gender", "race", "birthyear", "flagsg1", "g1classtype",
 df<-df[,nms]
 
 df<-df[df$flagsg1=="YES",] ##only those students in star in grade 1
-save(df,file="star_df.Rdata") #this is https://www.dropbox.com/s/pwmie785p1cljsw/star_df.Rdata?dl=0
 
+save(df,file="star_df.Rdata") #my version is: https://www.dropbox.com/s/pwmie785p1cljsw/star_df.Rdata?dl=0
+##save this somewhere special as you'll be using it frequently over next several weeks!
 
 
 #sch<-read.spss("STAR_K-3_Schools.sav",to.data.frame=TRUE) #school-level data. not currently being used

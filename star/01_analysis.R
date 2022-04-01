@@ -48,4 +48,3 @@ summary(mod)$coef[1:5,]
 ##compare to 0.27 in table 5 of finn & achilles
 
 
-##What are the differences betwen how we're choosing to analyze things versus the approach in F&A?
