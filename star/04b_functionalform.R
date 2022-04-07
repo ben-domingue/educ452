@@ -1,6 +1,3 @@
-##heterogeneous treatment fx
-##There has been substantial interest in the idea of heterogeneous treatment fx, or the notion that different units may be differentially impacted by the treatment.
-##Indeed, work with STAR has explored this idea: 
 load("star_df.Rdata") #https://www.dropbox.com/s/pwmie785p1cljsw/star_df.Rdata?dl=0
 std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
 df$g1treadss<-std(df$g1treadss)
@@ -25,7 +22,7 @@ df$g1classtype<-names(pr.class)[class]
 df$g1classsize<-ifelse(df$g1classtype=="SMALL CLASS",sample(13:17,nrow(df),replace=TRUE),sample(22:25,nrow(df),replace=TRUE))
 
 
-results<-function(df,f=NULL) {
+results<-function(df,f=NULL) { #f is going to be the thing that embeds differing functional form assumptions into our dgp
     rho<-cor(df$g1classsize,df$g1treadss,use='p')
     df$small<-ifelse(df$g1classtype=="SMALL CLASS",1,0)
     mod1<-lm(g1treadss~small+factor(g1schid),df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
@@ -53,10 +50,7 @@ results<-function(df,f=NULL) {
     rho
 }
 
-par(mgp=c(2,1,0),mar=c(3,3,1,1),mfrow=c(2,2))
-#################################
-##vanilla
-results(df0)
+par(mgp=c(2,1,0),mar=c(3,3,1,1),mfrow=c(2,2),oma=rep(.7,4))
 #################################
 ##linear functional form
 f<-function(x) -.02*(x-19)
@@ -76,3 +70,6 @@ f<-function(x) (-.08*(x-19))^2
 #plot(x,f(x),type='l')
 df$g1treadss<-rnorm(nrow(df),mean=f(df$g1classsize)-f(19),sd=.5) ##note sd
 results(df,f=f)
+#################################
+##vanilla
+results(df0)
