@@ -32,6 +32,7 @@ df$g1classtype<-names(pr.class)[class]
 df$g1treadss<-rnorm(N,mean=mean.class[class],sd=1)
 ##that's it! we have built a DGM from scratch. woohoo!!
 
+
 ##now let's look at the DAMs
 mod<-lm(g1treadss~g1classtype+factor(g1schid),df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
 summary(mod)$coef[1:2,]
