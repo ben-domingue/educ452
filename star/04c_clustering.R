@@ -3,6 +3,7 @@ load("star_df.Rdata") #https://www.dropbox.com/s/pwmie785p1cljsw/star_df.Rdata?d
 std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
 df$g1treadss<-std(df$g1treadss)
 df$g1tmathss<-std(df$g1tmathss)
+df0<-df
 
 
 sim<-function(df) { #this is going to automate what we saw in 02
@@ -28,7 +29,7 @@ sim<-function(df) { #this is going to automate what we saw in 02
 
 
 df<-sim(df0)
-##Let's see how clustered scores are within schools
+##Let's see how clustered scores are within schools as compared to our simulated work
 ratio.sd<-function(df) {
     s0<-var(df$g1treadss,na.rm=TRUE)
     mu<-aggregate(df$g1treadss,list(df$g1schid),mean,na.rm=TRUE)
@@ -36,11 +37,10 @@ ratio.sd<-function(df) {
     s1/s0
 }
 ratio.sd(df0)
-ratio.sd(df)
+ratio.sd(df) ##What's going on here?
 
-##What's going on here?
 ##How can we simulate data to have the right structure?
-sim2<-function(df,mu) { #this is going to automate what we saw in 02
+sim2<-function(df,mu) { #note the mu argument! this is going to contain information about school-specific effects
     ##params to use
     N<-nrow(df)
     pr.frl<-mean(df$g1freelunch=="FREE LUNCH",na.rm=TRUE)
