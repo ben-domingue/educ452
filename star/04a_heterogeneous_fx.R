@@ -59,7 +59,8 @@ for (prop in seq(.5,1,by=.1)) {
     }
     pow[as.character(prop)]<-mean(est<.05)
 }
-##so we are reasonably well-powered if prop is less than about 0.7
+pow
+##so we are reasonably well-powered if prop is less than about 0.7. what do you make of results for prop=1?
 
 
 results(df0) #not much evidence for heterogenity in our little example, although obviously we can't rule out small effects (as we just saw)
