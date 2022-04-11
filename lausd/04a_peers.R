@@ -1,42 +1,4 @@
-##not sure that the 04... are in the right order.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-load("LA_nice.Rdata") #https://www.dropbox.com/s/vsydexy87z9ot3u/LA_nice.Rdata?dl=0
-
-####################################################################
-#add prior score
-add_scores<-function(x,lag=1) {#feed a df & # lag through function
-  names(x)->nms#get names of variables
-  #first get prior scores
-  x$stud_id_this_year<-paste(x$student_id,x$year,x$grade,x$subject,sep="__")
-  #paste names of vars together to get id for this year
-  x$stud_id_last_year<-paste(x$student_id,x$year-lag,x$grade-lag,x$subject,sep="__")
-  #subtract lag to get lagged grade & year
-  tmp<-data.frame(stud_id_last_year=x$stud_id_this_year,scale_score_std_prior=x$scale_score_std)
-  #put id & prior together
-  col.nm<-paste("scale_score_std_lag",lag,sep="_")
-  #rename the prior to match the lag you pulled
-  names(tmp)[2]<-col.nm
-  x<-merge(x,tmp,all.x=TRUE)
-  #
-  x[,c(nms,col.nm)]
-}
-df<-add_scores(df)
-
+load("LA_nice_sub.Rdata") 
 
 ####################################################################
 ma<-df[df$subject=="MATHEMATICS",]
