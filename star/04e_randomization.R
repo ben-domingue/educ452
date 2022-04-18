@@ -61,4 +61,3 @@ lines(density(est.randomizeschool),lwd=3,col='green',lty=2)
 lines(density(est.frl),lwd=3,col='blue',lty=3)
 abline(v=co,lwd=2,col='black')
 segments(co-1.96*se,0,co+1.96*se,0,lwd=2,col='black')
-
