@@ -5,7 +5,7 @@ library(lme4)
 ####################################################################
 ma<-df[df$subject=="MATHEMATICS",]
 
-##we're goign to simulat scores but in a sneaky way
+##we're goign to simulate scores but in a sneaky way
 sd.error<-.55
 sd.teacherfx<-.29
 te<-rnorm(length(unique(ma$teacher_id)),mean=0,sd=sd.teacherfx)
@@ -25,10 +25,10 @@ transform<-function(x) {
     x
 }
 xx<-std(transform(ma$scale_score_std_lag_1))
-ma$scale_score_std1<-xx+ma$te+rnorm(nrow(ma),mean=0,sd=sd.error)
+ma$scale_score_std1<-xx+ma$te+rnorm(nrow(ma),mean=0,sd=sd.error) #some degree of violation of the linear association between last year and this year
 transform<-function(x) cos(2*x)
 xx<-std(transform(ma$scale_score_std_lag_1))
-ma$scale_score_std2<-xx+ma$te+rnorm(nrow(ma),mean=0,sd=sd.error)
+ma$scale_score_std2<-xx+ma$te+rnorm(nrow(ma),mean=0,sd=sd.error) #we're really going nuts breaking things here
 
 mod1<-lmer(scale_score_std1~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
 mod2<-lmer(scale_score_std2~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)

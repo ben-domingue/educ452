@@ -51,7 +51,7 @@ for (prop in seq(0,3,length.out=6)) { #here is where we are innovating! note the
     l<-list()
     for (i in 1:5) {
         mu.tmp<-mu
-        mu.tmp$mu.tmp<-sample(mu.tmp$mu.tmp,replace=TRUE)
+        mu.tmp$mu<-sample(mu.tmp$mu,replace=TRUE)
         mu.tmp$mu<-mu.tmp$mu*prop
         l[[i]]<-sim2(df0,mu.tmp)
     }

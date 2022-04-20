@@ -34,20 +34,20 @@ se<-summary(mod)$coef[2,2]
 est.randomize<-est.randomizeschool<-est.frl<-numeric()
 ##We're going to show variation in the estimate as a function of sampling variation by simulating 100 datasets.
 for (i in 1:100) {
-    df.tmp<-df #sim(df)
+    df.tmp<-df 
     df.tmp$small<-ifelse(df.tmp$g1classtype=="SMALL CLASS",1,0)
     df.tmp<-randomize(df.tmp)
     mod<-lm(g1treadss~small,df.tmp[df.tmp$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
     est.randomize[i]<-coef(mod)[2]
     ##
-    df.tmp<-df #sim(df)
+    df.tmp<-df 
     df.tmp$small<-ifelse(df.tmp$g1classtype=="SMALL CLASS",1,0)
     df.tmp<-randomize.school(df.tmp)
     df.tmp$small<-ifelse(df.tmp$g1classtype=="SMALL CLASS",1,0)
     mod<-lm(g1treadss~small+factor(g1schid),df.tmp[df.tmp$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
     est.randomizeschool[i]<-coef(mod)[2]
     ##
-    df.tmp<-df #sim(df)
+    df.tmp<-df 
     df.tmp$small<-ifelse(df.tmp$g1classtype=="SMALL CLASS",1,0)
     df.tmp<-randomize.frl(df.tmp)
     df.tmp$small<-ifelse(df.tmp$g1classtype=="SMALL CLASS",1,0)

@@ -17,9 +17,9 @@ te<-data.frame(teacher_id=unique(ma$teacher_id),te=te)
 ma<-merge(ma,te)
 ma$scale_score_std_lag_1<-ifelse(is.na(ma$scale_score_std_lag_1),0,ma$scale_score_std_lag_1)
 
-summary(mod0) #old model
 ma$scale_score_std<-.7*ma$scale_score_std_lag_1+ma$te+rnorm(nrow(ma),mean=0,sd=sd.error)
 mod<-lmer(scale_score_std~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
-summary(mod) #new model
+summary(mod0) #model with empirical data
+summary(mod) #new model; note what is similar and what is different!
 
 
