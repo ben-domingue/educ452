@@ -23,7 +23,7 @@ ma0<-ma #ma0 is original data
 xx<-std(ma$scale_score_std_lag_1)
 dd<-1-pnorm(xx)
 ran<-c(.9,1.1)
-sl<-(dd*(ran[2]-ran[1])+ran[1])
+sl<-(dd*(ran[2]-ran[1])+ran[1]) ##you should be able to draw a nice picture of where sl is coming from. it's going to be used in next line in key way
 ma$scale_score_std1<-xx+ma$te*sl+rnorm(nrow(ma),mean=0,sd=sd.error) #some degree of violation of the linear association between last year and this year
 mod1<-lmer(scale_score_std1~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
 
@@ -35,7 +35,7 @@ sl<-(dd*(ran[2]-ran[1])+ran[1])
 ma$scale_score_std2<-xx+sl+rnorm(nrow(ma),mean=0,sd=sd.error) #some degree of violation of the linear association between last year and this year
 mod2<-lmer(scale_score_std2~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
 
-
+##let's compare teacher VA to last year's scores
 mm<-by(ma$scale_score_std_lag_1,ma$teacher_id,mean,na.rm=TRUE)
 tmp<-data.frame(teacher_id=names(mm),lag.mean=as.numeric(mm))
 te2<-merge(te,tmp)
@@ -46,4 +46,24 @@ te2<-merge(te2,tmp)
 sd(te2$re1)
 sd(te2$re2) #pretty much 0
 cor(te2[,-1]) #the re2 estimates don't capture anything about teachers which, given the design, they shouldn't!
+plot(te2$te,te2$re1)
+plot(te2$te,te2$re2)
+
+
+
+##now let's do something much more egregious
+xx<-std(ma$scale_score_std_lag_1)
+sl<-ifelse(xx>0,1,0)
+ma$scale_score_std1<-xx+ma$te*sl+rnorm(nrow(ma),mean=0,sd=sd.error) #some degree of violation of the linear association between last year and this year
+mod1<-lmer(scale_score_std1~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
+
+
+z<-ranef(mod1)$teacher_id
+z<-data.frame(teacher_id=rownames(z),te.est=z[,1])
+#mm<-by(ma$scale_score_std_lag_1,ma$teacher_id,mean,na.rm=TRUE)
+#tmp<-data.frame(teacher_id=names(mm),lag.mean=as.numeric(mm))
+tmp<-ma[,c("teacher_id","te")]
+tmp<-tmp[!duplicated(tmp),]
+tmp<-merge(tmp,z)
+plot(tmp[,-1])
 

@@ -11,4 +11,3 @@ z2<-ranef(mr)$teacher_id
 te<-merge(z,z2,by=0)
 cor(te[,-1])
 
-##We observe a fairly high correlation (0.76) of teacher effects across subjects. Can you modify 03_simVAM.R to produce

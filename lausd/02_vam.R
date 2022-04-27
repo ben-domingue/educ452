@@ -9,8 +9,8 @@ ma<-df[df$subject=="MATHEMATICS",]
 mod<-lmer(scale_score_std~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
 summary(mod)$coeff #compare to table a-1, http://files.eric.ed.gov/fulltext/ED516008.pdf
 summary(mod)$varcor #can use this to compute icc
-0.285^2/(0.285^2+0.548^2) #=0.22, this is smaller than the 0.297 reported in table a1 of course.
-nrow(ranef(mod)[[1]]) #3836 teachers
+0.285^2/(0.285^2+0.548^2) #=0.21, this is smaller than the 0.297 reported in table a1 of course.
+nrow(ranef(mod)[[1]]) #4011 teachers
 
 ##fixed effects
 library(fixest)
