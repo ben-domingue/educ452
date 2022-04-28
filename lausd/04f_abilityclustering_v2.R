@@ -1,3 +1,6 @@
+##Now let's look at rothstein-like analyses
+
+
 load("LA_nice_sub.Rdata") 
 library(lme4)
 std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
@@ -38,6 +41,16 @@ peers<-function(x,peer.effect=.1) {
     x
 }
 
+rothsteintest<-function(x) {
+    x$stud_id_this_year<-paste(x$student_id,x$year,x$grade,x$subject,sep="__")
+    x$stud_id_last_year<-paste(x$student_id,x$year-1,x$grade-1,x$subject,sep="__")
+    tmp<-x[,c("stud_id_last_year","class")]
+    names(tmp)<-c("stud_id_this_year","class_lead")
+    x<-merge(x,tmp)
+    mod<-lmer(ss~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|class_lead),x)
+    sd(ranef(mod)$class_lead[,1])
+}
+
 out<-list()
 ##we're going to vary two things below. sig.class will control the strength of sorting (stronger sorting when this number is smaller). peer.effect will control the strength of peer effects
 for (sig.class in c(1,10)) for (peer.effect in c(.1,.5)) {
@@ -47,9 +60,8 @@ for (sig.class in c(1,10)) for (peer.effect in c(.1,.5)) {
                                  z<-data.frame(do.call("rbind",L))
                                  ##
                                  mod<-lmer(ss~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|class),z)
-                                 out[[paste(sig.class,peer.effect)]]<-c(sig.class=sig.class,peer.effect=peer.effect,teacher.sd=sd(ranef(mod)$class[,1]))
+                                 out[[paste(sig.class,peer.effect)]]<-c(sig.class=sig.class,peer.effect=peer.effect,teacher.sd=sd(ranef(mod)$class[,1]),rothstein=rothsteintest(z))
                              }
 tab<-do.call("rbind",out)
 tab
 
-##What we can see here is that "teacher effects" are minimal when peer effects are small (which is what we'd expect given that there are no teacher effects here, it's all peers!). we also see a diminishment of variation in "teacher effects" when sig.class is large. this is all as we'd expect
