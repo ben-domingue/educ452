@@ -18,17 +18,20 @@ ma0<-ma
 ##
 
 std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
-transform<-function(x) {
+##transformation #1
+transform<-function(x) { #some degree of violation of the linear association between last year and this year
     f<-ecdf(x)
     x<-f(x)
     x<-sqrt(20*(x+.05))
     x
 }
 xx<-std(transform(ma$scale_score_std_lag_1))
-ma$scale_score_std1<-xx+ma$te+rnorm(nrow(ma),mean=0,sd=sd.error) #some degree of violation of the linear association between last year and this year
-transform<-function(x) cos(2*x)
+ma$scale_score_std1<-xx+ma$te+rnorm(nrow(ma),mean=0,sd=sd.error) 
+
+##transformation #2
+transform<-function(x) cos(2*x) #we're really going nuts breaking things here
 xx<-std(transform(ma$scale_score_std_lag_1))
-ma$scale_score_std2<-xx+ma$te+rnorm(nrow(ma),mean=0,sd=sd.error) #we're really going nuts breaking things here
+ma$scale_score_std2<-xx+ma$te+rnorm(nrow(ma),mean=0,sd=sd.error) 
 
 mod1<-lmer(scale_score_std1~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
 mod2<-lmer(scale_score_std2~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)

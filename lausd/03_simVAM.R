@@ -8,7 +8,7 @@ ma<-df[df$subject=="MATHEMATICS",]
 library(lme4)
 mod0<-lmer(scale_score_std~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
 
-##We're going to simulate current-year scores based on a simple formula: they are last year's scores (or 0 if no score from last year) plus teacher effects plus erro
+##We're going to simulate current-year scores based on a simple formula: they are last year's scores (or 0 if no score from last year) plus teacher effects plus error
 ma$scale_score_std<-NA
 sd.error<-.55
 sd.teacherfx<-.29
