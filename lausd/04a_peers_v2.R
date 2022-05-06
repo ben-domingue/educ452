@@ -76,10 +76,12 @@ wt<-names(z)
 wt<-strsplit(wt," ")
 wt1<-sapply(wt,"[",1)
 wt2<-sapply(wt,"[",2)
-df<-data.frame(wt1=wt1,wt2=wt2,true.re1,true.re2,total.re1,total.re2)
 
+df<-data.frame(wt1=wt1,wt2=wt2,true.re1,true.re2,total.re1,total.re2)
 par(mfrow=c(1,3),mgp=c(2,1,0),mar=c(3,3,1,10))
 L<-split(df,df$wt2)
+nms<-as.numeric(names(L))
+L<-L[order(nms)]
 for (ii in 1:length(L)) {
     df<-L[[ii]]
     plot(NULL,xlim=0:1,ylim=0:1,xlab='wt',ylab='')
@@ -87,6 +89,7 @@ for (ii in 1:length(L)) {
         lines(df[,1],df[,i])
         mtext(side=4,at=df[nrow(df),i],names(df)[i],las=2,line=.25)
     }
+    legend("bottomleft",bty='n',legend=as.character(names(L)[ii]))
 }
 
 
