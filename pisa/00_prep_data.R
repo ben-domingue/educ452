@@ -41,7 +41,7 @@
 
 library(foreign)
 options(warn=-10)
-dat<-read.spss("CY07_MSU_STU_COG.sav",
+dat<-read.spss("CY07_MSU_STU_COG.sav", ##get original file here: https://www.dropbox.com/s/6luuhgqkevr3kyx/CY07_MSU_STU_COG.sav?dl=0
               to.data.frame=TRUE,
               use.value.labels=FALSE
               )
@@ -50,7 +50,8 @@ options(warn=1)
 #index<-sample(1:nrow(dat),50000)
 #dat<-dat[index,]
 
-toc<-c(math="pisa_ms_cog_overall_math_compendium_TOC.csv")#,read="pisa_ms_cog_overall_read_compendium_TOC.csv")
+toc<-c(math="pisa_ms_cog_overall_math_compendium_TOC.csv") #https://www.dropbox.com/s/4llkafh21tzty6g/pisa_ms_cog_overall_math_compendium_TOC.csv?dl=0
+                                        #,read="pisa_ms_cog_overall_read_compendium_TOC.csv") #https://www.dropbox.com/s/oyoigwjiq86x7ay/pisa_ms_cog_overall_read_compendium_TOC.csv?dl=0
 iii<-1
 dat->x
 it<-read.csv(toc[iii],header=FALSE)
@@ -86,5 +87,5 @@ x<-data.frame(do.call("rbind",L))
 
 df<-x[!is.na(x$resp),]
 
-save(df,file=paste0("pisa2018",names(toc)[iii],"_df.Rdata"))
+save(df,file=paste0("pisa2018",names(toc)[iii],"_df.Rdata")) ##https://www.dropbox.com/s/380xamew0bkrvf9/pisa2018math_df.Rdata?dl=0
 
