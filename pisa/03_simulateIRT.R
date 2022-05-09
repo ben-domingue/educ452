@@ -19,6 +19,13 @@ resp0<-resp
 co0<-co
     
 
-test<-matrix(runif(nrow(th)*nrow(co)),nrow=nrow(th),ncol=nrow(co))
-resp<-ifelse(pv>test,1,0)
+test<-matrix(runif(nrow(th)*nrow(co)),nrow=nrow(th),ncol=nrow(co)) #a different way of simulating bernoulli random variables
+resp<-ifelse(pv>test,1,0) #converting the matrix of probabilities to a matrix of ritem responses
+
+##Let's now compare our simulated data to the original to see if we captured key item structure
 plot(colMeans(resp),colMeans(pv))
+
+
+##Let's look at this again:
+co
+##A question: We used estimates of item parameters. If we wanted to add variation there, how might we do it?
