@@ -56,10 +56,11 @@ gen.resp<-function(th.pars,co,n.bad=0,N=3000,dif.offset=.2) {
 }
 g1<-gen.resp(groups[[1]],co)
 g2<-gen.resp(groups[[2]],co)
-g3<-gen.resp(groups[[1]],co,n.bad=45)
+g3<-gen.resp(groups[[1]],co,n.bad=45) #the third group in the simulation will have same ability as first group but 45 of the items will be harder for this group. 
 
 library(mirt)
 m <- multipleGroup(data.frame(rbind(g1,g2,g3)), 1, group = as.character(c(rep(1,nrow(g1)),rep(2,nrow(g2)),rep(3,nrow(g3)))),
                    invariance=c('slopes', 'intercepts','free_means','free_variances'))
 co<-coef(m)
-lapply(co,function(x) x[length(x)][[1]]) #could perhaps double up with simpler versions wherein you don't estimate mirt models but just look at observed % correct?
+lapply(co,function(x) x[length(x)][[1]]) 
+groups #even if we induce very substantial DIF for group 3, we still end up with a difference that is much larger than the one actually observed between Korea and Turkey
