@@ -80,3 +80,4 @@ for (sd.me in seq(0,1,by=.25)) {
     print("adjusted")
     print(c(sd.me,bias,rmse,corr))
 }
+
