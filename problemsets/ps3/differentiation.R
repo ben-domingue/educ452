@@ -17,7 +17,7 @@ plot(x$sd,x$te,pch=19,cex=.5)
 abline(lm(te~sd,x))
 cc<-cor(x$sd,x$te,use='p')
      
-##meh, not much going on (and, well, the opposite of my intuition!), but let's turn to a different question: would we be able to detect it if true?
+##meh, not much going on, but let's turn to a different question: would we be able to detect it if true?
 load("LA_nice_sub.Rdata") 
 ma<-df[df$subject=="MATHEMATICS",]
 m<-by(ma$scale_score_std_lag_1,ma$teacher_id,mean,na.rm=TRUE)
