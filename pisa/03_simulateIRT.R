@@ -23,7 +23,7 @@ test<-matrix(runif(nrow(th)*nrow(co)),nrow=nrow(th),ncol=nrow(co)) #a different 
 resp<-ifelse(pv>test,1,0) #converting the matrix of probabilities to a matrix of ritem responses
 
 ##Let's now compare our simulated data to the original to see if we captured key item structure
-plot(colMeans(resp),colMeans(pv)); abline(0,1)
+plot(colMeans(resp0,na.rm=TRUE),colMeans(resp,na.rm=TRUE)); abline(0,1)
 
 
 ##Let's look at this again:
