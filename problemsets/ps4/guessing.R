@@ -27,9 +27,9 @@ sim.guess<-function(th,co,floor=.2,beta=.5) {
     z<-outer(th,co[,2],"-")
     z<-z+matrix(rep(co[,2],length(th)),byrow=TRUE,ncol=nrow(co),nrow=length(th))
     pv<-1/(1+exp(-z))
-    for (i in 1:ncol(pv)) pv[,i]<-ifelse(pv[,i]<floor & guesser==1,floor,pv[,i])
-    test<-matrix(runif(length(th)*nrow(co)),nrow=length(th),ncol=nrow(co)) #a different way of simulating bernoulli random variables
-    resp<-ifelse(pv>test,1,0) #converting the matrix of probabilities to a matrix of ritem responses
+    for (i in 1:ncol(pv)) pv[,i]<-ifelse(pv[,i]<floor & guesser==1,floor,pv[,i]) ##the key bit
+    test<-matrix(runif(length(th)*nrow(co)),nrow=length(th),ncol=nrow(co)) 
+    resp<-ifelse(pv>test,1,0) 
     resp<-data.frame(resp)
     m<-mirt(resp,1,"2PL")
     fscores(m)
@@ -38,7 +38,7 @@ sim.guess<-function(th,co,floor=.2,beta=.5) {
 th.ng<-sim.noguess(th,co)
 th.g<-sim.guess(th,co)
 
-##let's look for bias in the estimaets that don't account for guessing
+##let's look for bias in the estimates that don't account for guessing
 del0<-th.ng-th
 del<-th.g-th
 m<-loess(del0~th)
@@ -48,7 +48,8 @@ m<-loess(del~th)
 tmp<-cbind(m$x,m$fitted)
 lines(tmp,col='red',lwd=2)
 
-par(mfrow=c(1,3),mgp=c(2,1,0),mar=c(3,3,1,1))
+##Let's look at how this might change as a function of beta
+par(mfrow=c(1,3),mgp=c(2,1,0),mar=c(3,3,2,1))
 for (beta in c(-1,0,1)) {
     th.g<-sim.guess(th,co,beta=beta)
     del<-th.g-th
@@ -58,4 +59,5 @@ for (beta in c(-1,0,1)) {
     m<-loess(del~th)
     tmp<-cbind(m$x,m$fitted)
     lines(tmp,col='red',lwd=2)
+    mtext(side=3,line=0,beta)
 }

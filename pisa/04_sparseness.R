@@ -32,7 +32,7 @@ m<-mirt(resp,1,"2PL",technical=list(NCYCLES=10000))
 co<-coef(m)
 co<-co[-length(co)]
 co<-do.call("rbind",co) #item parameters
-plot(co[,2],co0[,2])
+plot(co[,2],co0[,2],xlab="estimates",ylab="true"); abline(0,1)
 metrics<-function(x,y) { #we're going to use this to compare true and estimated difficulty params
     r1<-mean((x-y)^2)
     r2<-cor(x,y,method="spearman") 
@@ -48,7 +48,7 @@ m<-mirt(resp.na,1,"2PL",technical=list(NCYCLES=10000))
 co<-coef(m)
 co<-co[-length(co)]
 co<-do.call("rbind",co) #item parameters
-plot(co[,2],co0[,2])
+plot(co[,2],co0[,2],xlab="estimates",ylab="true"); abline(0,1)
 mseL$sparse<-c(mean(is.na(resp.na)),metrics(co[,2],co0[,2]))
 
 ##let's see how the degree of sparseness affects the mse (where we're just randomly sampling responses)
@@ -66,7 +66,7 @@ for (sparse in seq(0.1,.9,by=.1)) {
     co<-do.call("rbind",co) #item parameters
     mseL[[as.character(sparse)]]<-c(sparse,metrics(co[,2],co0[,2]))
 }
-tab<-do.call("rbind",mseL)
+tab<-do.call("rbind",mseL)##note that the sparse MSE is worse than even the 0.9 value. we'll come back to this
 
     
 

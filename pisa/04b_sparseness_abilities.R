@@ -54,4 +54,4 @@ for (sparse in seq(0.1,mean(is.na(resp0)),length.out=3)) {
     th.est<-fscores(m)
     mseL[[as.character(sparse)]]<-c(sparse,metrics(th[,1],th.est[,1]))
 }
-tab<-do.call("rbind",mseL)
+tab<-do.call("rbind",mseL) 
