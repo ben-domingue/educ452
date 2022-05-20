@@ -3,11 +3,13 @@ load("pisa2018math_df.Rdata") ##https://www.dropbox.com/s/380xamew0bkrvf9/pisa20
 ##let's just use a sample of items and countries
 items<-unique(df$item)
 df<-df[df$item %in% items[1:30],]
-countries<-c("POL","JPN","COL","SWE","PER")
+countries<-c("POL","JPN","COL","SWE","PER","THA","USA","FRA")
 df<-df[df$country %in% countries,]
 ##and a sample of respondents
-id<-sample(unique(df$id),max(10000,length(unique(df$id))))
-df<-df[df$id %in% id,]
+L<-split(df,df$country)
+f<-function(x) sample(unique(x$id),500)
+ids<-sapply(L,f)
+df<-df[df$id %in% as.numeric(ids),]
 df$id<-paste(df$id,df$country,sep="--") #let's add the country to the id just to have it handy
 
 ##first need to make item response data
@@ -38,12 +40,11 @@ cc<-strsplit(rownames(resp),"--")
 cc<-sapply(cc,"[",2) #get countries for respondents
 m <- multipleGroup(resp, 1, group = cc,
                                    invariance=c('slopes', 'intercepts','free_means','free_variances'))
-
 co<-coef(m)
 groups<-sapply(co,function(x) x[length(x)][[1]])
 empirical.estimates<-sort(groups[1,])
 
-##Let's now experiment with a simulation wherein we simulate item response data with the empirical structure (e.g., sparseness) and see how well we can do in terms of recovering mean-abilities for the countries we simulate based on sample size
+##Let's now experiment with a simulation wherein we simulate item response data with the empirical structure (e.g., sparseness) and see how well we can do in terms of recovering mean-abilities for the countries we simulate
 df0<-df
 
 items<-unique(df$item)
@@ -65,5 +66,9 @@ m <- multipleGroup(resp, 1, group = cc,
                                    invariance=c('slopes', 'intercepts','free_means','free_variances'))
 co<-coef(m)
 groups<-sapply(co,function(x) x[length(x)][[1]])
+tmp<-data.frame(country=colnames(groups),est=groups[1,])
+tmp<-merge(country,tmp)
+plot(tmp$avg,tmp$est); abline(0,1) 
 
-sort(groups[1,])
+##So, how would you assess the quality of the below estimates?
+empirical.estimates
