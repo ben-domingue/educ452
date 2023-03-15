@@ -1,5 +1,5 @@
 set.seed(8675309)
-zlibrary(MASS)
+library(MASS)
 xz<-mvrnorm(10000,mu=rep(0,2),Sigma=diag(1,2))
 x<-xz[,1]
 z<-xz[,2]
