@@ -77,9 +77,9 @@ for (i in 1:length(m2)) {
 z<-do.call("rbind",out)
 
 par(mfrow=c(1,2),mgp=c(2,1,0),mar=c(3,3,1,1))
-plot(m2,z[,1]); abline(0,1)
+plot(m2,z[,1],xlab="second mean",ylab="empirical mean"); abline(0,1)
 ##What does this tell us?
-plot(sd2,z[,2])
+plot(sd2,z[,2],xlab="second sd",ylab="empirical sd")
 ##What does this suggest? 
 
 ##Note: Analytic derivations of these facts would be preferable for any number of reasons. The goal here is to get our hands dirty with some real simulations but simulations are not always the right tool for the job! 
@@ -91,7 +91,7 @@ x<-mvrnorm(500000,mu=rep(0,2),Sigma=matrix(c(1,.5,.5,1),2,2))
 par(mfrow=c(2,3),mgp=c(2,1,0),mar=c(3,3,1,1))
 for (val in c(-2,-1,0,1,1.5,2.5)) {
     x2<-x[abs(x[,2]-val)<.01,]
-    plot(density(x2[,1]))
+    plot(density(x2[,1]),xlim=c(-6,6))
     legend("topleft",bty='n',legend=val)
 }
 

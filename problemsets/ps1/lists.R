@@ -10,8 +10,8 @@ lapply(l,class)
 l<-list()
 for (i in 1:10) l[[i]]<-runif(10)
 ##note the double brackets and why they matter!
-l[1]
-l[[1]]
+l[1] #what kind of object is this? class(l[1])
+l[[1]] #what kind of object is this? class(l[[1]])
 
 ##I can then write a second function to process that 'stuff'
 f<-function(x) c(mean(x),sd(x))
