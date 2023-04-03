@@ -18,7 +18,7 @@ pr.frl<-mean(df$g1freelunch=="FREE LUNCH",na.rm=TRUE)
 pr.class<-table(df$g1classtype)/N
 mean.class<-by(df$g1treadss,df$g1classtype,mean,na.rm=TRUE)
 
-df0<-df
+df0<-df ##note df0 is now the 'real' data
 
 df<-df[,c("stdntid","g1schid")]
 #free lunch

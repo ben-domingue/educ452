@@ -1,5 +1,5 @@
 library(foreign)
-df<-read.spss("STAR_Students.sav",to.data.frame=TRUE)
+df<-read.spss("STAR_Students.sav",to.data.frame=TRUE) #https://dataverse.harvard.edu/file.xhtml?fileId=666720&version=1.0
 names(df)<-tolower(names(df))
 
 ##get a subset of data for our purposes
