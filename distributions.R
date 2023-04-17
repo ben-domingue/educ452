@@ -66,7 +66,7 @@ hist(x[x[,2]<0,][,1],xlim=c(-4,4))
 
 ##################################################################################################
 ##now let's put a few things together to see some basic regression examples based on drawing from distributions
-##let's first look at a logistic regression example where we are regressing a binary outcome on a normall distributed predictor
+##let's first look at a logistic regression example where we are regressing a binary outcome on a normally distributed predictor
 beta<-1
 x<-rnorm(10000) #this will be the IV
 pr<-1/(1+exp(-1*(beta*x))) #the logistic transformation!
@@ -74,7 +74,7 @@ y<-rbinom(length(x),1,pr)
 m<-glm(y~x,family="binomial")
 coef(m)[2] #explore how this output changes as you chance beta
 
-##what if we flip is so that we have a binary predictor of a continuous outcome?
+##what if we flip it so that we have a binary predictor of a continuous outcome?
 beta<-1
 x<-rbinom(10000,1,.5)
 y<-beta*x+rnorm(length(x))

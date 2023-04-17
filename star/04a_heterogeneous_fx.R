@@ -35,7 +35,7 @@ results<-function(df) {
     list(co1,s[!grepl("^factor",rownames(s)),])
 }
 results(df)
-##ok, so we are well-powered to detect effects of that size. but that is pretty extreme. what if we went with a less extreme version
+##ok, so we are well-powered to detect effects of that size. but that (a 200% increase in effect) is pretty extreme. what if we went with a less extreme version
 
 ##let's do the less extreme thing a bunch of times so that we don't get confused by a single result
 est<-numeric()
@@ -49,7 +49,7 @@ summary(est) #we can't reliably distinguish this bit of heterogeneity from 0
 
 ##let's look at a more fully-fledged power analysis
 pow<-numeric()
-for (prop in seq(.5,1,by=.1)) {
+for (prop in seq(.5,1,by=.1)) { #prop is going to be the proportion of the effect of small class for frl students that non-frl students observe
     est<-numeric()
     for (i in 1:100) {
         mu<-mean.class[class]
@@ -66,7 +66,7 @@ pow
 results(df0) #not much evidence for heterogenity in our little example, although obviously we can't rule out small effects (as we just saw)
 
 
-##one question: how sensitive is power to the relative proportion of FRL students in the sample?
+##one question: what kind of sensitivity in power to the relative proportion of FRL students in the sample would you expect?
 
 
 
