@@ -34,7 +34,7 @@ ratio.sd<-function(df) {
     s0<-var(df$g1treadss,na.rm=TRUE)
     mu<-aggregate(df$g1treadss,list(df$g1schid),mean,na.rm=TRUE)
     s1<-var(mu[,2],na.rm=TRUE)
-    s1/s0
+    s1/s0 #the variance of school level means standardized by the overall outcome variance
 }
 ratio.sd(df0)
 ratio.sd(df) ##What's going on here?
