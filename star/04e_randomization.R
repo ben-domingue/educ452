@@ -7,6 +7,11 @@ std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
 df$g1treadss<-std(df$g1treadss)
 df$g1tmathss<-std(df$g1tmathss)
 
+bootstrap<-function(df) {
+    index<-sample(1:nrow(df),nrow(df),replace=TRUE)
+    df[index,]
+}
+
 randomize<-function(df) {
     df$g1treadss<-sample(df$g1treadss,size=nrow(df))
     df
@@ -31,7 +36,7 @@ df$small<-ifelse(df$g1classtype=="SMALL CLASS",1,0)
 mod<-lm(g1treadss~small+factor(g1schid),df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
 co<-coef(mod)[2]
 se<-summary(mod)$coef[2,2]
-est.randomize<-est.randomizeschool<-est.frl<-numeric()
+est.boot<-est.randomize<-est.randomizeschool<-est.frl<-numeric()
 ##We're going to show variation in the estimate as a function of sampling variation by simulating 100 datasets.
 for (i in 1:100) {
     df.tmp<-df 
@@ -53,6 +58,12 @@ for (i in 1:100) {
     df.tmp$small<-ifelse(df.tmp$g1classtype=="SMALL CLASS",1,0)
     mod<-lm(g1treadss~small+factor(g1schid),df.tmp[df.tmp$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
     est.frl[i]<-coef(mod)[2]
+    ##
+    df.tmp<-df
+    df.tmp$small<-ifelse(df.tmp$g1classtype=="SMALL CLASS",1,0)
+    df.tmp<-bootstrap(df.tmp)
+    mod<-lm(g1treadss~small+factor(g1schid),df.tmp[df.tmp$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
+    est.boot[i]<-coef(mod)[2]
 }
 
 plot(density(est.randomize),lwd=3,col='red',xlim=c(-.5,.5))
@@ -61,3 +72,5 @@ lines(density(est.randomizeschool),lwd=3,col='green',lty=2)
 lines(density(est.frl),lwd=3,col='blue',lty=3)
 abline(v=co,lwd=2,col='black')
 segments(co-1.96*se,0,co+1.96*se,0,lwd=2,col='black')
+qu<-quantile(est.boot,c(.025,.975))
+segments(qu[1],2,qu[2],2,col='gray',lwd=4)
