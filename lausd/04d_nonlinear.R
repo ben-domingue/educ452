@@ -42,6 +42,12 @@ tmp<-ma[ii,]
 plot(tmp$scale_score_std_lag_1,tmp$scale_score_std1)
 plot(tmp$scale_score_std_lag_1,tmp$scale_score_std2)
 
+##############################################################
+##PAUSE
+##how much damage do you think these translations will do to the teacher effects?
+##############################################################
+
+
 summary(mod1)$coef
 summary(mod2)$coef #we're starting to see some attenuation of this coefficient here.
 
