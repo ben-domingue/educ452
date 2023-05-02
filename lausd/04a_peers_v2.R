@@ -89,7 +89,7 @@ for (ii in 1:length(L)) {
         lines(df[,1],df[,i])
         mtext(side=4,at=df[nrow(df),i],names(df)[i],las=2,line=.25)
     }
-    legend("bottomleft",bty='n',legend=as.character(names(L)[ii]))
+    legend("bottomleft",bty='n',legend=paste("wt2=",as.character(names(L)[ii])))
 }
 
 
