@@ -16,7 +16,8 @@ x<-merge(te,s)
 plot(x$sd,x$te,pch=19,cex=.5)
 abline(lm(te~sd,x))
 cc<-cor(x$sd,x$te,use='p')
-     
+cc
+
 ##meh, not much going on, but let's turn to a different question: would we be able to detect it if true?
 load("LA_nice_sub.Rdata") 
 ma<-df[df$subject=="MATHEMATICS",]
