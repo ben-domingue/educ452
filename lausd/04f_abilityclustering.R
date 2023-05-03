@@ -15,17 +15,20 @@ sd(ranef(mod0)$teacher_id[,1])
 ##We are going to induce variation in teacher effects via manipulation of sig.class and peer.effect
 assign.class<-function(x,sig.class=1) {
     nn<-length(unique(x$teacher_id))
-    ran<-range(ma$scale_score_std_lag_1)
-    ce<-seq(ran[1],ran[2],length.out=nn+2)
-    ce<-ce[-c(1,length(ce))]
+    #ran<-range(x$scale_score_std_lag_1)
+    #ce<-seq(ran[1],ran[2],length.out=nn+2)
+    #ce<-ce[-c(1,length(ce))]
+    M<-mean(x$scale_score_std_lag_1,na.rm=TRUE)
+    ce<-rnorm(nn,mean=M,sd=sig.class)
     p<-outer(x$scale_score_std_lag_1,ce,"-")
-    getclass<-function(y,sig) {
-        d<-dnorm(y,sd=sig)
+    getclass<-function(y) {
+        S<-ifelse(nrow(x)>1,sd(x$scale_score_std_lag_1,na.rm=TRUE),1)
+        d<-dnorm(y,sd=S)
         d<-d/sum(d)
         cl<-rmultinom(1,1,d)
         which(cl[,1]>0)
     }
-    cl<-apply(p,1,getclass,sig=sig.class)
+    cl<-apply(p,1,getclass)
     x$class<-paste(x$school_id,cl,sep="__")
     x
 }
@@ -40,14 +43,19 @@ peers<-function(x,peer.effect=.1) {
 
 out<-list()
 ##we're going to vary two things below. sig.class will control the strength of sorting (stronger sorting when this number is smaller). peer.effect will control the strength of peer effects
-for (sig.class in c(1,10)) for (peer.effect in c(.1,.5)) {
-                                 L<-split(ma,ma$school_id)
+for (peer.effect in c(.1,1)) for (sig.class in c(0.01,.1,1,2))  {
+                                 L<-split(ma,paste(ma$school_id,ma$grade))
                                  L<-lapply(L,assign.class,sig.class=sig.class)
+                                 ##checking role of sig.class
+                                 f<-function(x) sd(by(x$scale_score_std_lag_1,x$class,mean,na.rm=TRUE))
+                                 s<-sapply(L,f)
+                                 per.class.var<-mean(s[!is.na(s)])
+                                 ##
                                  L<-lapply(L,peers,peer.effect=peer.effect)
                                  z<-data.frame(do.call("rbind",L))
                                  ##
                                  mod<-lmer(ss~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|class),z)
-                                 out[[paste(sig.class,peer.effect)]]<-c(sig.class=sig.class,peer.effect=peer.effect,teacher.sd=sd(ranef(mod)$class[,1]))
+                                 out[[paste(sig.class,peer.effect)]]<-c(sig.class=sig.class,per.class.var=per.class.var,peer.effect=peer.effect,teacher.sd=sd(ranef(mod)$class[,1]))
                              }
 tab<-do.call("rbind",out)
 tab

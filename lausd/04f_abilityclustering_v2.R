@@ -15,45 +15,21 @@ mod0<-lmer(scale_score_std~scale_score_std_lag_1+in.title1+ell+join.after.k+fact
 sd(ranef(mod0)$teacher_id[,1])
 ## 0.27. we are going to induce variation around this quantity
 
-##We are going to induce variation in teacher effects via manipulation of sig.class and peer.effect
-assign.class<-function(x,sig.class=1) {
-    nn<-length(unique(x$teacher_id))
-    ran<-range(ma$scale_score_std_lag_1)
-    ce<-seq(ran[1],ran[2],length.out=nn+2)
-    ce<-ce[-c(1,length(ce))]
-    p<-outer(x$scale_score_std_lag_1,ce,"-")
-    getclass<-function(y,sig) {
-        d<-dnorm(y,sd=sig)
-        d<-d/sum(d)
-        cl<-rmultinom(1,1,d)
-        which(cl[,1]>0)
-    }
-    cl<-apply(p,1,getclass,sig=sig.class)
-    x$class<-paste(x$school_id,cl,sep="__")
-    x
-}
-
-peers<-function(x,peer.effect=.1) {
-    mm<-by(x$scale_score_std_lag_1,x$class,mean)
-    tmp<-data.frame(class=names(mm),mm=as.numeric(mm))
-    x<-merge(x,tmp)
-    x$ss<-rnorm(nrow(x),mean=x$scale_score_std_lag_1+peer.effect*x$mm,sd=1) #we are assigning test scores here. note that teachers play no role!! it's purely your score last year plus some offset (moderated by peer.effect) of your peers
-    x
-}
+##assign.class() and peers() are both in 04f_abilityclustering.R
 
 rothsteintest<-function(x) {
     x$stud_id_this_year<-paste(x$student_id,x$year,x$grade,x$subject,sep="__")
-    x$stud_id_last_year<-paste(x$student_id,x$year-1,x$grade-1,x$subject,sep="__")
+    x$stud_id_last_year<-paste(x$student_id,x$year-1,x$grade-1,x$subject,sep="__") #contrast with line 10 in 00_...
     tmp<-x[,c("stud_id_last_year","class")]
     names(tmp)<-c("stud_id_this_year","class_lead")
     x<-merge(x,tmp)
     mod<-lmer(ss~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|class_lead),x)
-    sd(ranef(mod)$class_lead[,1])
+    sd(ranef(mod)$class_lead[,1]) #focus on what we've catpured here. what would larger or smaller numbers here make you think?
 }
 
 out<-list()
 ##we're going to vary two things below. sig.class will control the strength of sorting (stronger sorting when this number is smaller). peer.effect will control the strength of peer effects
-for (sig.class in c(1,10)) for (peer.effect in c(.1,.5)) {
+for (peer.effect in c(.1,1)) for (sig.class in c(1,2))  {
                                  L<-split(ma,ma$school_id)
                                  L<-lapply(L,assign.class,sig.class=sig.class)
                                  L<-lapply(L,peers,peer.effect=peer.effect)
