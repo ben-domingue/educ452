@@ -34,6 +34,7 @@ ma$scale_score_std_lag_1<-NA #we're going to throw this away to make sure we don
 library(lme4)
 std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
 ##let's simulate new lagged scores where the obs score is reading score plus error
+unadjusted<-adjusted<-list()
 for (sd.me in seq(0,1,by=.25)) {
     g4<-ma[ma$grade==4,]
     g4$lagscore<-rnorm(nrow(g4),mean=g4$true_lag,sd=sd.me) ###this is important. last year's lagged maths score is a noisy version of the truth. note we won't use this again; we'll use reading_lag to IV lagscore
@@ -60,8 +61,7 @@ for (sd.me in seq(0,1,by=.25)) {
     bias<-mean(err)
     rmse<-sqrt(mean(err^2))
     corr<-cor(z$est,z$lm)
-    print("unadjusted")
-    print(c(sd.me,bias,rmse,corr))
+    unadjusted[[as.character(sd.me)]]<-c(sd.me,bias,rmse,corr)
     ##adjusted
     g4<-ivfun(g4)
     mod<-lmer(scale_score_std~lagscore+in.title1+ell+join.after.k+factor(year)+(1|teacher_id),g4)
@@ -77,7 +77,8 @@ for (sd.me in seq(0,1,by=.25)) {
     bias<-mean(err)
     rmse<-sqrt(mean(err^2))
     corr<-cor(z$est,z$lm)
-    print("adjusted")
-    print(c(sd.me,bias,rmse,corr))
+    adjusted[[as.character(sd.me)]]<-c(sd.me,bias,rmse,corr)
 }
 
+do.call("rbind",unadjusted)
+do.call("rbind",adjusted)
