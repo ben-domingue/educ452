@@ -68,7 +68,8 @@ co<-coef(m)
 groups<-sapply(co,function(x) x[length(x)][[1]])
 tmp<-data.frame(country=colnames(groups),est=groups[1,])
 tmp<-merge(country,tmp)
-plot(tmp$avg,tmp$est); abline(0,1) 
+par(mfrow=c(1,1),mgp=c(2,1,0),mar=c(3,3,1,1))
+plot(tmp$avg,tmp$est,xlab='truth country',ylab='estimated country'); abline(0,1) 
 
 ##So, how would you assess the quality of the below estimates?
 empirical.estimates

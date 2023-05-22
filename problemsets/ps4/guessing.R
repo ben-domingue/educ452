@@ -59,5 +59,5 @@ for (beta in c(-1,0,1)) {
     m<-loess(del~th)
     tmp<-cbind(m$x,m$fitted)
     lines(tmp,col='red',lwd=2)
-    mtext(side=3,line=0,beta)
+    mtext(side=3,line=0,paste0('beta=',beta))
 }
