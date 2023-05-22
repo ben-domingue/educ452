@@ -4,6 +4,7 @@
 ## that we get from applications of these models to item response data
 
 resp1 <- read.table("https://github.com/ben-domingue/252L/raw/master/data/emp-rasch.txt", header=FALSE)
+resp1 #can you make sense of this data structure? hopefully fairly straightforward.
 
 ## fit the rasch model
 library(mirt) # might have to run install.packages("mirt")
@@ -22,7 +23,7 @@ get_coef <- function(mod) {
   co <- co[-length(co)]#why do i get rid of this last bit?
   do.call("rbind", co)
 }
-coef<-get_coef(m1) #first column is alpha (note that they don't vary), second column is 'difficulty', ignore third and fourth
+coef<-get_coef(m1) #first column is alpha (note that they don't vary), second column is 'difficulty', ignore third and fourth [these relate to asymptotes]
 coef
 
 ## in particular, i would look over this closely vis-a-vis the relevant part of the mirt manual:
