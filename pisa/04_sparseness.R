@@ -50,6 +50,8 @@ co<-co[-length(co)]
 co<-do.call("rbind",co) #item parameters
 plot(co[,2],co0[,2],xlab="estimates",ylab="true"); abline(0,1)
 mseL$sparse<-c(mean(is.na(resp.na)),metrics(co[,2],co0[,2]))
+##
+mseL
 
 ##let's see how the degree of sparseness affects the mse (where we're just randomly sampling responses)
 for (sparse in seq(0.1,.9,by=.1)) {
@@ -67,6 +69,6 @@ for (sparse in seq(0.1,.9,by=.1)) {
     mseL[[as.character(sparse)]]<-c(sparse,metrics(co[,2],co0[,2]))
 }
 tab<-do.call("rbind",mseL)##note that the sparse MSE is worse than even the 0.9 value. we'll come back to this
-
-    
+##
+tab
 
