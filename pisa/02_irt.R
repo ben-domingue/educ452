@@ -17,6 +17,7 @@ for (i in 1:length(L)) {
 }
 
 resp<-data.frame(do.call("cbind",resp))
+resp #note sparseness
 
 #save(resp,file="pisa_resp.Rdata"); we'll use this file downstream. available at: https://www.dropbox.com/s/07i1gmqk082ribt/pisa_resp.Rdata?dl=0
 

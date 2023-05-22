@@ -11,7 +11,7 @@ th<-fscores(m) #now estimate abilities
 co<-coef(m)
 co<-co[-length(co)]
 co<-do.call("rbind",co) #item parameters
-z<-outer(th[,1],co[,1],"*")
+z<-outer(th[,1],co[,1],"*") #outer is a great function. can you see what it is doing? look at help documentatation if it is confusing!
 z<-z+matrix(rep(co[,2],nrow(th)),byrow=TRUE,ncol=nrow(co),nrow=nrow(th))
 pv<-1/(1+exp(-z))
 
