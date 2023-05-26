@@ -2,14 +2,14 @@ N<-100
 sd.error<-1
 
 tab<-list()
-for (b.x in seq(0,1,length.out=4)) {
+for (b.x in seq(0,1,length.out=4)) { #b.x is covariate effect
     print(b.x)
-    x<-rnorm(N) #covariate
-    t<-rbinom(N,1,.5) #treatment status; note independence from x
-    b.t<-sort(runif(250))
+    b.t<-sort(runif(250)) #b.t is treatment effect
     #
     out<-list()
     for (i in 1:length(b.t)) {
+        x<-rnorm(N) #covariate
+        t<-rbinom(N,1,.5) #treatment status; note independence from x
         y<-b.x*x+b.t[i]*t+rnorm(N,sd=sd.error)
         m1<-lm(y~t)
         s1<-summary(m1)$coef[2,]
