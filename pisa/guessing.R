@@ -27,6 +27,6 @@ for (i in 1:length(out)) {
     plot(NULL,xlim=c(-4,4),ylim=c(-4,4))
     abline(h=0,col='gray'); abline(v=0,col='gray')
     lines(out[[i]]$th,out[[i]]$fitted,type='l',col=cols[i])
-    abline(lm(est~th,out[[i]]),lty=2,col=cols[i])
+    abline(0,1)
     legend("topleft",bty='n',paste0("mu= ",names(out)[i]),cex=2)
 }
