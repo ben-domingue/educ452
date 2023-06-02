@@ -24,7 +24,7 @@ for (mu in seq(0,-1.5,length.out=4)) {
 cols<-colorRampPalette(c("blue", "red"))( length(out))
 par(mfrow=c(1,4),mgp=c(2,1,0),mar=c(3,3,1,1))
 for (i in 1:length(out)) {
-    plot(NULL,xlim=c(-4,4),ylim=c(-4,4))
+    plot(NULL,xlim=c(-4,4),ylim=c(-4,4),xlab='true',ylab='est')
     abline(h=0,col='gray'); abline(v=0,col='gray')
     lines(out[[i]]$th,out[[i]]$fitted,type='l',col=cols[i])
     abline(0,1)
