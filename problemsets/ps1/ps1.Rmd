@@ -29,7 +29,7 @@ options(dplyr.summarise.inform = FALSE)
 
 > Tip 2: Questions in red. If a subquestion has no red, no response is needed.
 
-# Question 1 
+# Question 1 Bernoulli Distribution
 
 Simulations with classic distributions [see distributions_bernoulli.R]: A Bernoulli distribution [https://en.wikipedia.org/wiki/Bernoulli_distribution] is useful when you want to simulate a variable that takes one of two states (e.g., true/false, correct/incorrect, etc); we’ll generically denote these states as 0 and 1. It has one parameter which is the probability of the distribution generating a 1. If we call that parameter p, the probability of the distribution generating a 0 is 1-p so we’ve completely characterized the distribution. 
 
@@ -110,7 +110,7 @@ for (N in c(10,50,100,1000,5000)) for (n in c(5,25,100,1000,5000)) fun(N,n)
 > YOUR ANSWER HERE
 
 
-# Question 2
+# Question 2 Normal Distribution 
 More than any other distribution, we’re going to all become BFF with the normal distribution this quarter. To get started, let’s experiment with a few things.
 
 ## 2A Univariate normal distribution
@@ -179,7 +179,7 @@ for (val in c(-2,-1,0,1,1.5,2.5)) {
 
 > YOUR ANSWER HERE
 
-# Question 3
+# Question 3 Multinomial Distribution
 We’ll often use a simplified version of the Multinomial distribution (https://en.wikipedia.org/wiki/Multinomial_distribution). The Multinomial distribution is a generalized version of the Binomial distribution where each of the n independently observed processes is not Bernoulli but one that generates one of k outcomes. We’ll use n=1 and then this distribution will generate outcomes for each person. 
 
 ## 3A 
@@ -198,7 +198,7 @@ We’ll often use a simplified version of the Multinomial distribution (https://
 
 ```
 
-# Question 4 
+# Question 4 Linear Regression
 Linear regression. I simulate a dataset in a straightforward way based on the linear regression model. 
 ```{r}
 set.seed(8675309)
@@ -225,7 +225,7 @@ Building on what is in linear_regressions.R, <span style="color:red"><strong>ple
 
 > YOUR ANSWER HERE
 
-# Question 5 
+# Question 5 Logistic Regression
 Logistic regression supposes that a binary outcome y depends on some predictor in the following way: 
 $\Pr(y = 1 \mid x) = \frac{1}{1 + \exp\left( - (b_0 + b_1 x) \right)}$
 
