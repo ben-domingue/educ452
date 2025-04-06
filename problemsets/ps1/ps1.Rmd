@@ -3,10 +3,10 @@ title: "EDUC 452 PS1"
 author: "###Your name goes here###"
 date: "`r Sys.time()`"
 output:
-  pdf_document:
-    number_sections: true
   html_document:
     df_print: paged
+  pdf_document:
+    number_sections: true
 urlcolor: blue
 editor_options: 
   markdown: 
@@ -28,9 +28,7 @@ options(dplyr.summarise.inform = FALSE)
 > This homework is due by **Friday, April 18th, 8:00am**.
 > Upload a html file to Canvas called `ps1.html`
 
-> Tip 1: Code: <https://github.com/ben-domingue/educ452/tree/main/problemsets/ps1>
-
-> Tip 2: Questions in red.
+> Tip: Questions in red.
 > If a subquestion has no red, no response is needed.
 
 # Question 1 Bernoulli Distribution
@@ -109,12 +107,12 @@ Connection to CLT: The CLT is a wonderfully useful theorem that tells us under w
 fun<-function(N,n,p=0.5) { #N is the number of people, n is the number of tosses per person
     x<-rbinom(N,n,p)
     x<-(x-mean(x))/sd(x)
-    hist(x,main='',freq=FALSE,yaxt='n')
+    hist(x,main='',freq=FALSE,yaxt='n',sub='',xaxt='n',yaxt='n')
     xv<-seq(-3,3,length.out=1000)
     lines(xv,dnorm(xv))
     legend("topleft",bty='n',c(paste0("N=",N),paste0("n=",n)))
 }
-par(mfrow=c(5,5),mar=c(3,3,1,1),mgp=c(2,1,0),oma=rep(0,4))
+par(mfrow=c(5,5),mar=c(1,1,1,1),mgp=c(2,1,0),oma=rep(0,4))
 for (N in c(10,50,100,1000,5000)) for (n in c(5,25,100,1000,5000)) fun(N,n)
 ```
 
@@ -162,7 +160,7 @@ z<-do.call("rbind",out)
 
 par(mfrow=c(1,2),mgp=c(2,1,0),mar=c(3,3,1,1))
 plot(m2,z[,1],xlab="second mean",ylab="empirical mean"); abline(0,1)
-plot(sd2,z[,2],xlab="second sd",ylab="empirical sd")
+plot(sd2,z[,2],xlab="second sd",ylab="empirical sd"); abline(0,1)
 
 ```
 
@@ -194,7 +192,8 @@ for (val in c(-2,-1,0,1,1.5,2.5)) {
 
 ```
 
-What do you think? Note the centers of these distributions on the x-axis. What would you need to change in the above to change those values? 
+[<strong>Note the centers of these distributions on the x-axis. What would you need to change in the above to change those values?</strong>]{style="color:red"}
+
 
 > YOUR ANSWER HERE
 
@@ -224,7 +223,6 @@ We’ll use n=1 and then this distribution will generate outcomes for each perso
 
 # Question 4 Linear Regression
 
-Linear regression.
 I simulate a dataset in a straightforward way based on the linear regression model.
 
 ```{r}
