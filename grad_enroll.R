@@ -1,4 +1,5 @@
-load("grad_enroll.Rdata") ##x
+load("grad_enroll.Rdata") ##x; see /home/bdomingu/Dropbox/stanford/classes/edu400a/src/grad
+
 ##Los Angeles Unified
 nboot<-100
 plot(x[,-1])
