@@ -23,4 +23,5 @@ f<-function(p,N,...) {
     lines(N,fitted(m),...)
 }
 f(p,N,lwd=2,col='black')
+abline(.8,.0,col='red',lwd=2,lty=2)
 
