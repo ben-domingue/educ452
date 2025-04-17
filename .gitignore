@@ -2,3 +2,4 @@ priv/*.R
 priv/*
 *.ign
 
+star/star_df.Rdata
