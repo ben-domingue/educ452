@@ -34,11 +34,11 @@ df$g1treadss<-rnorm(N,mean=mean.class[class],sd=1)
 
 
 ##now let's look at the DAMs
-df0$g1classtype <- relevel(factor(df0$g1classtype), ref = "REGULAR CLASS")
+df0$g1classtype <- relevel(factor(df0$g1classtype), ref = "REGULAR CLASS") ##simulated data
 mod1<-lm(g1treadss~g1classtype+factor(g1schid),df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
 summary(mod1)$coef[1:2,]
 
-df$g1classtype <- relevel(factor(df$g1classtype), ref = "REGULAR CLASS")
+df$g1classtype <- relevel(factor(df$g1classtype), ref = "REGULAR CLASS") ##empirical data
 mod2<-lm(g1treadss~g1classtype+factor(g1schid),df0[df0$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
 summary(mod2)$coef[1:2,]
 
