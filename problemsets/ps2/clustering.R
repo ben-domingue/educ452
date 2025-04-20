@@ -35,7 +35,7 @@ sim2<-function(df,mu) { #we also used this in class
     df$g1treadss<-rnorm(N,mean=mean.class[class],sd=1)
     ##add school offset
     df<-merge(df,mu)
-    df$g1treadss<-df$g1treadss+df$mu #perhaps note here that since mu is indep of anything we could use random effects models?
+    df$g1treadss<-df$g1treadss+df$mu 
     ##
     mod0<-lm(g1treadss~g1classtype,df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
     mod1<-lm(g1treadss~g1classtype+factor(g1schid),df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
@@ -51,7 +51,7 @@ for (prop in seq(0,3,length.out=6)) { #here is where we are innovating! note the
     l<-list()
     for (i in 1:5) {
         mu.tmp<-mu
-        mu.tmp$mu<-sample(mu.tmp$mu,replace=TRUE)
+        mu.tmp$mu<-sample(mu.tmp$mu,replace=TRUE) #note school effects are random noise. not connected to frl for eaxmple
         mu.tmp$mu<-mu.tmp$mu*prop
         l[[i]]<-sim2(df0,mu.tmp)
     }
@@ -63,3 +63,4 @@ names(tab)<-c("prop","sd.ratio","est.vanilla","se.vanilla","est.fe","se.fe")
 tab
 summary(est)$coef
 ##What do you see? What changes as we increase the between-school variation in test scores?
+ratio.sd(df)
