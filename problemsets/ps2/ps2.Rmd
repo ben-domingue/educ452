@@ -1,0 +1,219 @@
+---
+title: "EDUC 452 PS2"
+author: "###Your name goes here###"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    df_print: paged
+  pdf_document:
+    number_sections: true
+urlcolor: blue
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r setup, include=FALSE}
+# load packages
+library("knitr")
+library("tidyverse")
+
+# use a nicer plotting theme theme
+theme_set(theme_classic())
+
+# disable warnings about grouping
+options(dplyr.summarise.inform = FALSE)
+```
+
+> This homework is due by **Friday, May 9th, 8:00am**.
+> Upload a html file to Canvas called `ps2.html`
+
+# Question 1 Ability concentration
+
+Student abilities tend to cluster into schools. The degree to which abilities are concentrated can be a problem for precise identification of treatment effects under certain designs. Here, we’re going to assess the effect of clustering on the quality of our estimates of the treatment effect. This will build off the work we did in class on clustering but will get more creative in terms of how we think about ability clustering. 
+
+## 1A
+First specify what you think the effect of clustering will be on the resulting inferences. Which quantities will be impacted by clustering? Be specific! It is fine if you are wrong; the point is not to be right, the point is to try to intuit what is going to happen. Developing this intuition is at the heart of this course!
+
+> YOUR ANSWER HERE
+
+## 1B
+
+If you’re feeling ambitious, make an attempt at this analysis without looking at my code (but feel free to build off the code we discussed in class here: <https://github.com/ben-domingue/educ452/blob/main/star/04c_clustering.R>). 
+
+```{r}
+### YOUR CODE HERE ###
+
+```
+
+## 1C
+I sketched out my thoughts on this issue here. What was the effect of clustering? Were we able to fix it? How?
+
+```{r}
+setwd("~/Documents/Code/educ452") #You may set your own path
+load("star/star_df.Rdata") #https://www.dropbox.com/s/pwmie785p1cljsw/star_df.Rdata?dl=0
+
+std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
+df$g1treadss<-std(df$g1treadss)
+df$g1tmathss<-std(df$g1tmathss)
+df0<-df
+
+##here is a baseline estimate to which we will compare what comes later
+est<-lm(g1treadss~g1classtype,df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
+summary(est)$coef
+
+```
+```{r}
+ratio.sd<-function(df) { #this is what we used in class
+    s0<-var(df$g1treadss,na.rm=TRUE)
+    mu<-aggregate(df$g1treadss,list(df$g1schid),mean,na.rm=TRUE)
+    s1<-var(mu[,2],na.rm=TRUE)
+    s1/s0
+}
+
+sim2<-function(df,mu) { #we also used this in class
+    ##params to use
+    N<-nrow(df)
+    pr.frl<-mean(df$g1freelunch=="FREE LUNCH",na.rm=TRUE)
+    pr.class<-table(df$g1classtype)/N
+    mean.class<-by(df$g1treadss,df$g1classtype,mean,na.rm=TRUE)
+    ##
+    df0<-df
+    df<-df[,c("stdntid","g1schid")]
+    #free lunch
+    frl<-rbinom(N,size=1,prob=pr.frl)
+    df$g1freelunch<-ifelse(frl==1,"FREE LUNCH","NON-FREE LUNCH")
+    #class type
+    class<-rmultinom(N,1,pr.class)
+    class<-apply(class,2,which.max)
+    df$g1classtype<-names(pr.class)[class]
+    #scores
+    df$g1treadss<-rnorm(N,mean=mean.class[class],sd=1)
+    ##add school offset
+    df<-merge(df,mu)
+    df$g1treadss<-df$g1treadss+df$mu #perhaps note here that since mu is indep of anything we could use random effects models?
+    ##
+    mod0<-lm(g1treadss~g1classtype,df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
+    mod1<-lm(g1treadss~g1classtype+factor(g1schid),df[df$g1classtype %in% c("SMALL CLASS","REGULAR CLASS"),])
+    c(ratio.sd(df),summary(mod0)$coef[2,1:2],summary(mod1)$coef[2,1:2]) #this will be the ratio of SDs, the vanilla lm estimate+SE, and then the estimate+SE for when we add school fixed effects
+}
+
+mu<-aggregate(df0$g1treadss,list(df0$g1schid),mean,na.rm=TRUE)
+mu<-data.frame(mu)
+names(mu)<-c("g1schid","mu")
+mu$mu<-sample(mu$mu,replace=TRUE)
+
+out<-list()
+for (prop in seq(0,3,length.out=6)) { #here is where we are innovating! note the role of prop
+    l<-list()
+    for (i in 1:5) {
+        mu.tmp<-mu
+        mu.tmp$mu<-sample(mu.tmp$mu,replace=TRUE)
+        mu.tmp$mu<-mu.tmp$mu*prop
+        l[[i]]<-sim2(df0,mu.tmp)
+    }
+    tab<-do.call("rbind",l)
+    out[[as.character(prop)]]<-c(prop,colMeans(tab))
+}
+tab<-data.frame(do.call("rbind",out))
+names(tab)<-c("prop","sd.ratio","est.vanilla","se.vanilla","est.fe","se.fe")
+```
+
+```{r}
+tab
+```
+```{r}
+summary(est)$coef
+```
+
+> YOUR ANSWER HERE
+
+# Question 2 Attrition
+
+Attrition can be a huge problem in an RCT (as discussed by both Krueger and Hanushek). Suppose, for example, that all of the affluent children in big classes left these schools for private schools. We would thus end up with bias in our estimates. In reality, I don’t think it was that big of a problem. But, we can also probe the degree to which it would bias results under different assumptions. The goal here is to build a DGM wherein students have a probability of attriting that varies as a function of class size and to assess the sensitivity of the vanilla DAM to the differences in probability of attrition. 
+
+## 2A 
+
+Can you do some simple descriptive work to try to identify the level of attrition that occurred in the data?
+
+```{r}
+### YOUR CODE HERE ###
+
+```
+
+> YOUR ANSWER HERE
+
+## 2B
+Can you sketch out in a conceptual fashion what a DGM for this process might be?
+In my view, the trick here is to have attrition be a Bernoulli random variable whose parameter depends on something structural about the student (e.g., a past test score, their FRL status, etc).
+
+> YOUR ANSWER HERE
+
+# 2C
+If you want to try to instantiate the issue in Part 2B in code, better still! 
+```{r}
+### YOUR CODE HERE ###
+
+```
+
+## 2D
+Build the DAM. If you can show what level of attrition would start to lead to serious bias (and how that compares to the level of actually observed attrition), you’re killing it!
+```{r}
+### YOUR CODE HERE ###
+
+```
+
+> YOUR ANSWER HERE
+
+# Question 3 Measurement Error
+
+We have thus far assumed that the error in outcomes is perfectly well-behaved Gaussian/normal noise. It need not be! In fact, most models for such test score outcomes assume that measurement error is heteroscedastic and ceiling/floor effects are even possible. 
+
+## 3A 
+Please reconsider the basic STAR DGM but now with non-normal measurement error. What are implications for recovery of treatment effect? 
+
+```{r}
+### YOUR CODE HERE ###
+
+```
+
+> YOUR ANSWER HERE
+
+## 3B 
+Now consider the basic STAR DGM but now with non-normal standard error. Any takeaway here?
+
+```{r}
+### YOUR CODE HERE ###
+
+```
+
+> YOUR ANSWER HERE
+
+# Question 4 The bootstrap and randomization inference
+The bootstrap and randomization inference: Below we are going to use these techniques to better understand uncertainty in our effect estimates. In both cases, please respect the fact that students are clustered into schools (so resampling should be done within school).
+
+## 4A
+Please use the bootstrap to generate a non-parametric SE for the STAR treatment effect. How does it compare to the parametric SE?
+```{r}
+### YOUR CODE HERE ###
+
+```
+
+> YOUR ANSWER HERE
+
+## 4B
+Use randomization inference to study the variation in estimated ‘effect’ when there is in fact not one. What does this suggest about the ‘significance’ of the observed empirical effect?
+```{r}
+### YOUR CODE HERE ###
+
+```
+
+> YOUR ANSWER HERE
+
+# Session info
+
+Information about this R session including which version of R was used, and what packages were loaded.
+
+```{r sessinfo}
+sessionInfo()
+```
