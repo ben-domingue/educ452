@@ -30,7 +30,7 @@ options(dplyr.summarise.inform = FALSE)
 
 # Question 1 Ability concentration
 
-Student abilities tend to cluster into schools. The degree to which abilities are concentrated can be a problem for precise identification of treatment effects under certain designs. Here, we’re going to assess the effect of clustering on the quality of our estimates of the treatment effect. This will build off the work we did in class on clustering but will get more creative in terms of how we think about ability clustering. 
+Student abilities tend to cluster into schools. The degree to which abilities are concentrated can be a problem for precise identification of treatment effects under certain designs. Here, we’re going to assess the effect of clustering on the quality of our estimates of the treatment effect.  
 
 ## 1A
 First specify what you think the effect of clustering will be on the resulting inferences. Which quantities will be impacted by clustering? Be specific! It is fine if you are wrong; the point is not to be right, the point is to try to intuit what is going to happen. Developing this intuition is at the heart of this course!
@@ -50,8 +50,8 @@ If you’re feeling ambitious, make an attempt at this analysis without looking 
 I sketched out my thoughts on this issue here. What was the effect of clustering? Were we able to fix it? How?
 
 ```{r}
-setwd("~/Documents/Code/educ452") #You may set your own path
-load("star/star_df.Rdata") #https://www.dropbox.com/s/pwmie785p1cljsw/star_df.Rdata?dl=0
+setwd("~/Dropbox/stanford/classes/edu452/data/") #You will need to set your own path
+load("star_df.Rdata") #https://www.dropbox.com/s/pwmie785p1cljsw/star_df.Rdata?dl=0
 
 std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
 df$g1treadss<-std(df$g1treadss)
@@ -180,7 +180,7 @@ Please reconsider the basic STAR DGM but now with non-normal measurement error. 
 > YOUR ANSWER HERE
 
 ## 3B 
-Now consider the basic STAR DGM but now with non-normal standard error. Any takeaway here?
+Now consider the basic STAR DGM but now with non-normal standard error. What are the implications here of this violation of the assumption of homoscedasticity?
 
 ```{r}
 ### YOUR CODE HERE ###
