@@ -41,9 +41,9 @@ results(df)
 est<-numeric()
 for (i in 1:25) {
     mu<-mean.class[class]
-    mu<-2*mu*ifelse(df$g1freelunch=="FREE LUNCH",1,.85)
+    mu<-mu*ifelse(df$g1freelunch=="FREE LUNCH",1,.85)
     df$g1treadss<-rnorm(N,mean=mu,sd=1)
-    est[i]<-results(df)[[2]][4,1]
+    est[i]<-results(df)[[2]][4,1] #just get the estimate for the interaction
 }
 summary(est) #we can't reliably distinguish this bit of heterogeneity from 0
 
@@ -53,7 +53,7 @@ for (prop in seq(.5,1,by=.1)) { #prop is going to be the proportion of the effec
     est<-numeric()
     for (i in 1:100) {
         mu<-mean.class[class]
-        mu<-2*mu*ifelse(df$g1freelunch=="FREE LUNCH",1,prop)
+        mu<-mu*ifelse(df$g1freelunch=="FREE LUNCH",1,prop)
         df$g1treadss<-rnorm(N,mean=mu,sd=1)
         est[i]<-results(df)[[2]][4,4]
     }
