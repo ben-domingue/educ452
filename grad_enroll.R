@@ -2,7 +2,10 @@ load("grad_enroll.Rdata") ##x; see /home/bdomingu/Dropbox/stanford/classes/edu40
 
 ##Los Angeles Unified
 nboot<-100
+par(mfrow=c(1,2),mgp=c(2,1,0))
 plot(x[,-1])
+
+lm(x[,3]~x[,2])
 
 #############################################################################
 ##bootstrap [and why intercept=0?]
