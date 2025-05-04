@@ -12,7 +12,7 @@ mod0<-lmer(scale_score_std~scale_score_std_lag_1+in.title1+ell+join.after.k+fact
 sd(ranef(mod0)$teacher_id[,1])
 ## 0.27. we are going to induce variation around this quantity
 
-##We are going to induce variation in teacher effects via manipulation of sig.class and peer.effect
+##We are going to induce variation in 'teacher effects' via manipulation of sig.class and peer.effect
 assign.class<-function(x,sig.class=1) {
     nn<-length(unique(x$teacher_id))
     #ran<-range(x$scale_score_std_lag_1)
