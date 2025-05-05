@@ -1,5 +1,3 @@
-
-
 par(mfrow=c(1,2),mgp=c(2,1,0),mar=c(3,3,1,1))
 hist(x$experience_total, freq = FALSE,breaks=50)
 curve(dexp(x, rate =mod$estimate), from = 0, col = "red", add = TRUE)
