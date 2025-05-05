@@ -50,7 +50,7 @@ If you’re feeling ambitious, make an attempt at this analysis without looking 
 I sketched out my thoughts on this issue here. What was the effect of clustering? Were we able to fix it? How?
 
 ```{r}
-setwd("~/Dropbox/stanford/classes/edu452/data/") #You will need to set your own path
+setwd("~/Documents/Code/educ452/star/") #You will need to set your own path
 load("star_df.Rdata") #https://www.dropbox.com/s/pwmie785p1cljsw/star_df.Rdata?dl=0
 
 std<-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
@@ -170,8 +170,7 @@ Build the DAM. If you can show what level of attrition would start to lead to se
 We have thus far assumed that the error in outcomes is perfectly well-behaved Gaussian/normal noise. It need not be! In fact, most models for such test score outcomes assume that measurement error is heteroscedastic and ceiling/floor effects are even possible. 
 
 ## 3A 
-Please reconsider the basic STAR DGM but now with non-normal measurement error. What are implications for recovery of treatment effect? 
-
+Please reconsider the basic STAR DGM but now with non-normal measurement error. What are implications for recovery of treatment effect and for the standard errors? 
 ```{r}
 ### YOUR CODE HERE ###
 
@@ -179,15 +178,6 @@ Please reconsider the basic STAR DGM but now with non-normal measurement error. 
 
 > YOUR ANSWER HERE
 
-## 3B 
-Now consider the basic STAR DGM but now with non-normal standard error. What are the implications here of this violation of the assumption of homoscedasticity?
-
-```{r}
-### YOUR CODE HERE ###
-
-```
-
-> YOUR ANSWER HERE
 
 # Question 4 The bootstrap and randomization inference
 The bootstrap and randomization inference: Below we are going to use these techniques to better understand uncertainty in our effect estimates. In both cases, please respect the fact that students are clustered into schools (so resampling should be done within school).

@@ -1622,7 +1622,7 @@ display: none;
 
 <h1 class="title toc-ignore">EDUC 452 PS2</h1>
 <h4 class="author">###Your name goes here###</h4>
-<h4 class="date">2025-04-21 09:37:54.80636</h4>
+<h4 class="date">2025-05-05 13:36:14.746089</h4>
 
 </div>
 
@@ -1637,9 +1637,7 @@ Upload a html file to Canvas called <code>ps2.html</code></p>
 abilities are concentrated can be a problem for precise identification
 of treatment effects under certain designs. Here, we’re going to assess
 the effect of clustering on the quality of our estimates of the
-treatment effect. This will build off the work we did in class on
-clustering but will get more creative in terms of how we think about
-ability clustering.</p>
+treatment effect.</p>
 <div id="a" class="section level2">
 <h2>1A</h2>
 <p>First specify what you think the effect of clustering will be on the
@@ -1662,7 +1660,7 @@ class here: <a href="https://github.com/ben-domingue/educ452/blob/main/star/04c_
 <h2>1C</h2>
 <p>I sketched out my thoughts on this issue here. What was the effect of
 clustering? Were we able to fix it? How?</p>
-<pre class="r"><code>setwd(&quot;~/Dropbox/stanford/classes/edu452/data/&quot;) #You will need to set your own path
+<pre class="r"><code>setwd(&quot;~/Documents/Code/educ452/star/&quot;) #You will need to set your own path
 load(&quot;star_df.Rdata&quot;) #https://www.dropbox.com/s/pwmie785p1cljsw/star_df.Rdata?dl=0
 
 std&lt;-function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE)
@@ -1673,9 +1671,9 @@ df0&lt;-df
 ##here is a baseline estimate to which we will compare what comes later
 est&lt;-lm(g1treadss~g1classtype,df[df$g1classtype %in% c(&quot;SMALL CLASS&quot;,&quot;REGULAR CLASS&quot;),])
 summary(est)$coef</code></pre>
-<pre><code>##                          Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)                  0.17      0.023     7.2  9.4e-13
-## g1classtypeREGULAR CLASS    -0.30      0.031    -9.7  4.5e-22</code></pre>
+<pre><code>##                            Estimate Std. Error   t value     Pr(&gt;|t|)
+## (Intercept)               0.1666210 0.02326882  7.160699 9.411014e-13
+## g1classtypeREGULAR CLASS -0.2988719 0.03076732 -9.713942 4.450702e-22</code></pre>
 <pre class="r"><code>ratio.sd&lt;-function(df) { #this is what we used in class
     s0&lt;-var(df$g1treadss,na.rm=TRUE)
     mu&lt;-aggregate(df$g1treadss,list(df$g1schid),mean,na.rm=TRUE)
@@ -1732,13 +1730,13 @@ names(tab)&lt;-c(&quot;prop&quot;,&quot;sd.ratio&quot;,&quot;est.vanilla&quot;,&
 <pre class="r"><code>tab</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["prop"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sd.ratio"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["est.vanilla"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["se.vanilla"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["est.fe"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["se.fe"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.0","2":"0.014","3":"0.29","4":"0.030","5":"0.29","6":"0.03","_rn_":"0"},{"1":"0.6","2":"0.073","3":"0.28","4":"0.031","5":"0.28","6":"0.03","_rn_":"0.6"},{"1":"1.2","2":"0.221","3":"0.29","4":"0.034","5":"0.29","6":"0.03","_rn_":"1.2"},{"1":"1.8","2":"0.411","3":"0.28","4":"0.039","5":"0.30","6":"0.03","_rn_":"1.8"},{"1":"2.4","2":"0.552","3":"0.32","4":"0.044","5":"0.30","6":"0.03","_rn_":"2.4"},{"1":"3.0","2":"0.652","3":"0.29","4":"0.050","5":"0.29","6":"0.03","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["prop"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sd.ratio"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["est.vanilla"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["se.vanilla"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["est.fe"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["se.fe"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.0","2":"0.01198050","3":"0.2883087","4":"0.02996488","5":"0.2869404","6":"0.03026458","_rn_":"0"},{"1":"0.6","2":"0.07866039","3":"0.2881841","4":"0.03164200","5":"0.2824247","6":"0.03078716","_rn_":"0.6"},{"1":"1.2","2":"0.25996199","3":"0.3049057","4":"0.03460995","5":"0.2952929","6":"0.03030029","_rn_":"1.2"},{"1":"1.8","2":"0.44438257","3":"0.3368980","4":"0.03964558","5":"0.3327575","6":"0.02999010","_rn_":"1.8"},{"1":"2.4","2":"0.57506328","3":"0.3105666","4":"0.04535029","5":"0.2942256","6":"0.03027325","_rn_":"2.4"},{"1":"3.0","2":"0.69088794","3":"0.3147723","4":"0.05238634","5":"0.2975666","6":"0.03028305","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code>summary(est)$coef</code></pre>
-<pre><code>##                          Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)                  0.17      0.023     7.2  9.4e-13
-## g1classtypeREGULAR CLASS    -0.30      0.031    -9.7  4.5e-22</code></pre>
+<pre><code>##                            Estimate Std. Error   t value     Pr(&gt;|t|)
+## (Intercept)               0.1666210 0.02326882  7.160699 9.411014e-13
+## g1classtypeREGULAR CLASS -0.2988719 0.03076732 -9.713942 4.450702e-22</code></pre>
 <blockquote>
 <p>YOUR ANSWER HERE</p>
 </blockquote>
@@ -1802,16 +1800,7 @@ heteroscedastic and ceiling/floor effects are even possible.</p>
 <h2>3A</h2>
 <p>Please reconsider the basic STAR DGM but now with non-normal
 measurement error. What are implications for recovery of treatment
-effect?</p>
-<pre class="r"><code>### YOUR CODE HERE ###</code></pre>
-<blockquote>
-<p>YOUR ANSWER HERE</p>
-</blockquote>
-</div>
-<div id="b-2" class="section level2">
-<h2>3B</h2>
-<p>Now consider the basic STAR DGM but now with non-normal standard
-error. Any takeaway here?</p>
+effect and for the standard errors?</p>
 <pre class="r"><code>### YOUR CODE HERE ###</code></pre>
 <blockquote>
 <p>YOUR ANSWER HERE</p>
@@ -1833,7 +1822,7 @@ treatment effect. How does it compare to the parametric SE?</p>
 <p>YOUR ANSWER HERE</p>
 </blockquote>
 </div>
-<div id="b-3" class="section level2">
+<div id="b-2" class="section level2">
 <h2>4B</h2>
 <p>Use randomization inference to study the variation in estimated
 ‘effect’ when there is in fact not one. What does this suggest about the
@@ -1849,41 +1838,38 @@ treatment effect. How does it compare to the parametric SE?</p>
 <p>Information about this R session including which version of R was
 used, and what packages were loaded.</p>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.4.3 (2025-02-28)
-## Platform: x86_64-pc-linux-gnu
-## Running under: Ubuntu 20.04.6 LTS
+<pre><code>## R version 4.3.3 (2024-02-29)
+## Platform: aarch64-apple-darwin20 (64-bit)
+## Running under: macOS Sonoma 14.6.1
 ## 
 ## Matrix products: default
-## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0 
-## LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
 ## 
 ## locale:
-##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8       
-##  [4] LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
-##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C              
-## [10] LC_TELEPHONE=C             LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## time zone: America/Los_Angeles
-## tzcode source: system (glibc)
+## tzcode source: internal
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] lubridate_1.9.4 forcats_1.0.0   stringr_1.5.1   dplyr_1.1.4     purrr_1.0.4    
-##  [6] readr_2.1.5     tidyr_1.3.1     tibble_3.2.1    ggplot2_3.5.1   tidyverse_2.0.0
-## [11] knitr_1.49     
+##  [1] lubridate_1.9.3 forcats_1.0.0   stringr_1.5.1   dplyr_1.1.4    
+##  [5] purrr_1.0.4     readr_2.1.5     tidyr_1.3.1     tibble_3.2.1   
+##  [9] ggplot2_3.5.1   tidyverse_2.0.0 knitr_1.49     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gtable_0.3.6      jsonlite_1.8.9    compiler_4.4.3    tidyselect_1.2.1 
-##  [5] jquerylib_0.1.4   scales_1.3.0      yaml_2.3.10       fastmap_1.2.0    
-##  [9] R6_2.5.1          generics_0.1.3    munsell_0.5.1     bslib_0.9.0      
-## [13] pillar_1.10.1     tzdb_0.4.0        rlang_1.1.5       cachem_1.1.0     
+##  [1] gtable_0.3.4      jsonlite_1.9.0    compiler_4.3.3    tidyselect_1.2.1 
+##  [5] jquerylib_0.1.4   scales_1.3.0      yaml_2.3.10       fastmap_1.1.1    
+##  [9] R6_2.6.1          generics_0.1.3    munsell_0.5.1     bslib_0.7.0      
+## [13] pillar_1.10.1     tzdb_0.4.0        rlang_1.1.5       cachem_1.0.8     
 ## [17] stringi_1.8.4     xfun_0.51         sass_0.4.9        timechange_0.3.0 
-## [21] cli_3.6.3         withr_3.0.2       magrittr_2.0.3    digest_0.6.37    
-## [25] grid_4.4.3        rstudioapi_0.17.1 hms_1.1.3         lifecycle_1.0.4  
-## [29] vctrs_0.6.5       evaluate_1.0.3    glue_1.8.0        colorspace_2.1-1 
-## [33] rmarkdown_2.29    tools_4.4.3       pkgconfig_2.0.3   htmltools_0.5.8.1</code></pre>
+## [21] cli_3.6.4         withr_3.0.2       magrittr_2.0.3    digest_0.6.37    
+## [25] grid_4.3.3        rstudioapi_0.16.0 hms_1.1.3         lifecycle_1.0.4  
+## [29] vctrs_0.6.5       evaluate_0.23     glue_1.8.0        colorspace_2.1-0 
+## [33] rmarkdown_2.29    tools_4.3.3       pkgconfig_2.0.3   htmltools_0.5.8</code></pre>
 </div>
 
 
