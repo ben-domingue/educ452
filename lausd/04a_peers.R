@@ -13,7 +13,7 @@ ma0<-ma #ma0 is original data
 ####################################################################
 ##Let's first look at this empirically
 mm<-by(ma0$scale_score_std_lag_1,ma0$teacher_id,mean,na.rm=TRUE)
-lm<-data.frame(teacher_id=names(mm),lm=as.numeric(mm))
+lm<-data.frame(teacher_id=names(mm),lm=as.numeric(mm)) #last year's score by teacher
 ma0<-merge(ma0,lm)
 ma0<-ma0[!is.na(ma0$lm),]
 mod0a<-lmer(scale_score_std~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma0)
@@ -39,7 +39,7 @@ simfun<-function(wt,te,ma0,
     te$true<-rnorm(nrow(te),mean=0,sd=1)
     te$te<-wt*te$lm+te$true #note that the teacher effect is part teacher ('true') and part class composition (te$lm)
     s1<-sd(te$te)
-    te$te<-te$te*sd.teacherfx/s1
+    te$te<-te$te*sd.teacherfx/s1 #rescaling
     sd(te$te)
     te$lm<-NULL
     ma<-merge(ma,te)
@@ -49,9 +49,13 @@ simfun<-function(wt,te,ma0,
     ma<-merge(ma,zz,all.x=TRUE)
     ##
     ma$scale_score_std_lag_1<-ifelse(is.na(ma$scale_score_std_lag_1),0,ma$scale_score_std_lag_1)
-    ma$scale_score_std1<-.7*ma$scale_score_std_lag_1+ma$te+ma$lm+rnorm(nrow(ma),mean=0,sd=sd.error)
+    ma$scale_score_std1<-.7*ma$scale_score_std_lag_1+ma$te+
+        #ma$lm+
+        rnorm(nrow(ma),mean=0,sd=sd.error)
     mod1<-lmer(scale_score_std1~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
-    mod2<-lmer(scale_score_std1~scale_score_std_lag_1+lm+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
+    mod2<-lmer(scale_score_std1~scale_score_std_lag_1
+               +lm ##big difference between mod1 and mod2
+               +in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
     ##
     mm<-by(ma$scale_score_std_lag_1,ma$teacher_id,mean,na.rm=TRUE)
     tmp<-data.frame(teacher_id=names(mm),lag.mean=as.numeric(mm))

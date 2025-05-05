@@ -15,11 +15,8 @@ sd(ranef(mod0)$teacher_id[,1])
 ##We are going to induce variation in 'teacher effects' via manipulation of sig.class and peer.effect
 assign.class<-function(x,sig.class=1) {
     nn<-length(unique(x$teacher_id))
-    #ran<-range(x$scale_score_std_lag_1)
-    #ce<-seq(ran[1],ran[2],length.out=nn+2)
-    #ce<-ce[-c(1,length(ce))]
     M<-mean(x$scale_score_std_lag_1,na.rm=TRUE)
-    ce<-rnorm(nn,mean=M,sd=sig.class)
+    ce<-rnorm(nn,mean=M,sd=sig.class) #these are the 'teacher means'
     p<-outer(x$scale_score_std_lag_1,ce,"-")
     getclass<-function(y) {
         S<-ifelse(nrow(x)>1,sd(x$scale_score_std_lag_1,na.rm=TRUE),1)
@@ -49,7 +46,7 @@ for (peer.effect in c(.1,1)) for (sig.class in c(0.01,.1,1,2))  {
                                  ##checking role of sig.class
                                  f<-function(x) sd(by(x$scale_score_std_lag_1,x$class,mean,na.rm=TRUE))
                                  s<-sapply(L,f)
-                                 per.class.var<-mean(s[!is.na(s)])
+                                 per.class.var<-mean(s[!is.na(s)]) #this is the SD in class means of grades within a school
                                  ##
                                  L<-lapply(L,peers,peer.effect=peer.effect)
                                  z<-data.frame(do.call("rbind",L))
