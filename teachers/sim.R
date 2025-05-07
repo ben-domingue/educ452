@@ -22,7 +22,7 @@ z<-do.call("rbind",out)
 plot(z)
 m<-lm(z[,1]~z[,2])
 
-##if we edit `obs.year<-2020` to use 2010, what will happen to coef(m)[2]? what happens if obs.year is replaced with 2030? 2050?
+##if we edit `obs.year<-2020` to use 2010 (while leaving `min=1980`), what will happen to coef(m)[2]? what happens if obs.year is replaced with 2030? 2050?
 
 
 par(mfrow=c(1,2),mgp=c(2,1,0),mar=c(3,3,1,1))
