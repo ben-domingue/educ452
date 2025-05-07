@@ -24,7 +24,7 @@ ma<-df[df$subject=="MATHEMATICS",]
 m<-by(ma$scale_score_std_lag_1,ma$teacher_id,mean,na.rm=TRUE)
 m<-data.frame(teacher_id=names(m),lm=as.numeric(m))
 ma<-merge(ma,m)
-sim<-function(ma,scale) {
+sim<-function(ma,scale) { #note we are going to use `scale' to control whether teachers are more/less effective due to variation in SD of prior abilities
     ma$scale_score_std<-NA
     sd.error<-.55
     sd.teacherfx<-.29
