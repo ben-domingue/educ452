@@ -36,5 +36,5 @@ for (sd.me in seq(0,1,by=.25)) {
     bias<-mean(err)
     rmse<-sqrt(mean(err^2))
     corr<-cor(z$est,z$lm)
-    print(c(sd.me,bias,rmse,corr))
+    print(c(sd.me,bias,rmse,corr)) #the sd of measurement error, bias in VA estimates, variance of VA estimates, correlation with prior year means
 }
