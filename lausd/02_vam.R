@@ -11,6 +11,7 @@ summary(mod)$coeff #compare to table a-1, http://files.eric.ed.gov/fulltext/ED51
 summary(mod)$varcor #can use this to compute icc
 0.285^2/(0.285^2+0.548^2) #=0.21, this is smaller than the 0.297 reported in table a1. due to methodological diffs. we'll switch below to something similar to what we did originally
 nrow(ranef(mod)[[1]]) #4011 teachers
+re<-ranef(mod)[[1]]
 
 ##fixed effects
 library(fixest)
@@ -43,3 +44,5 @@ y<-data.frame(id=names(fe),fe=fe)
 x<-merge(x,y)
 va<-eb(x)[,c("id","eb")]
 sd(va$eb,na.rm=TRUE) #0.28, not far from 0.297 in study
+
+z<-merge(re,va,by.x=0,by.y=1)
