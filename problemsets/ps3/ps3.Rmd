@@ -1,0 +1,261 @@
+---
+title: "EDUC 452 PS3"
+author: "###Your name goes here###"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    df_print: paged
+  pdf_document:
+    number_sections: true
+urlcolor: blue
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r setup, include=FALSE}
+# load packages
+library("knitr")
+library("tidyverse")
+
+# use a nicer plotting theme theme
+theme_set(theme_classic())
+
+# disable warnings about grouping
+options(dplyr.summarise.inform = FALSE)
+```
+
+> This homework is due by **Friday, May 23th, 8:00am**.
+> Upload a html file to Canvas called `ps3.html`
+
+# Question 1 Correlated Teacher Effects 
+
+We observe fairly high correlations (r=0.76, see here) of teacher effects across reading and math. 
+```{r}
+setwd("~/Documents/Code/educ452/lausd/") #set your own directory
+load("LA_nice_sub.Rdata") 
+ 
+library(lme4)
+ma<-df[df$subject=="MATHEMATICS",]
+mm<-lmer(scale_score_std~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
+re<-df[df$subject=="READING",]
+mr<-lmer(scale_score_std~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),re)
+
+z<-ranef(mm)$teacher_id
+z2<-ranef(mr)$teacher_id
+te<-merge(z,z2,by=0)
+cor(te[,-1])
+```
+
+One question we could ask: are these so high that they are in fact evidence that teacher effects don’t vary across subject? Especially given that we are focused on younger kids, this might not be a wildly implausible hypothesis. Can you vary 03_simVAM.R [<https://github.com/ben-domingue/educ452/blob/main/lausd/03_simVAM.R>] in a way that allows you to observe the kind of variation you get in these correlations when the true DGP has teacher effects being identical? [Hint: This should be a pretty straightforward simulation! If teacher effects are identical across subjects, think about what would need to change/be added to line 20 of 03_simVAM.R.]
+
+```{r p1}
+### YOUR CODE HERE ###
+
+```
+
+> YOUR ANSWER HERE
+
+
+# Question 2 Grade Retention
+
+Grade retention is an issue. If certain kids in grade 2 aren’t moving on to grade 3, this might be a concern given that we are inducing what would seem like substantial selection. Let’s think it through to get a sense for how much bias there may be.
+
+## 2A 
+If you look at the code prep [<https://github.com/ben-domingue/educ452/blob/main/lausd/00_data.R>] , how are we effectively handling students that got retained? [Hint: think about the lagged score]
+
+> YOUR ANSWER HERE
+
+## 2B
+We might be worried about this. Let’s explore it! How would you describe the potential bias introduced there (i.e., describe to me what you are observing as a function of increases in the delta argument)?
+
+```{r}
+#setwd("~/Documents/Code/educ452/lausd/") #change to your directory
+load("LA_nice_sub.Rdata") 
+
+####################################################################
+ma<-df[df$subject=="MATHEMATICS",]
+ma<-ma[!is.na(ma$scale_score_std_lag_1),]
+
+library(lme4)
+retention<-function(delta=-2,ma) {
+    ma$scale_score_std<-NA
+    sd.error<-.55
+    sd.teacherfx<-.29
+    te<-rnorm(length(unique(ma$teacher_id)),mean=0,sd=sd.teacherfx)
+    te<-data.frame(teacher_id=unique(ma$teacher_id),te=te)
+    ma<-merge(ma,te)
+    ma$scale_score_std<-.7*ma$scale_score_std_lag_1+ma$te+rnorm(nrow(ma),mean=0,sd=sd.error)
+    ##now let's remove students
+    p<-1/(1+exp(-3*(ma$scale_score_std_lag_1-delta)))
+    retain<-rbinom(nrow(ma),1,p)
+    print(table(retain))
+    ma<-ma[retain==1,]
+    print(nrow(ma))
+    ##
+    mod<-lmer(scale_score_std~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
+    z<-ranef(mod)$teacher_id
+    z<-data.frame(teacher_id=rownames(z),est=z[,1])
+    z<-merge(te,z)
+    z$bias<-z$est-z$te
+    y<-by(ma$scale_score_std_lag_1,ma$teacher_id,mean,na.rm=TRUE)
+    y<-data.frame(teacher_id=names(y),ly=as.numeric(y))
+    z<-merge(z,y)
+    list(delta,table(retain),z)
+}
+
+out<-list()
+for (delta in seq(-3,-1,length.out=5)) out[[as.character(delta)]]<-retention(delta=delta,ma)
+
+par(mfrow=c(2,3),mgp=c(2,1,0),mar=c(3,3,1,1))
+for (i in 1:length(out)) {
+    z<-out[[i]][[3]]
+    plot(z$ly,z$bias,col='gray',pch=19,cex=.5)
+    mm<-loess(bias~ly,z)
+    ly<-seq(quantile(z$ly,.01),quantile(z$ly,.99),length.out=250)
+    yv<-predict(mm,data.frame(ly=ly))
+    lines(ly,yv,col='red')
+}
+```
+
+> YOUR ANSWER HERE
+
+## 2C
+Each value of delta induced a different passing rate. Relative to these values, what do you think about the possibility of bias in the actual LAUSD data related to passing?
+
+```{r p2c}
+### YOUR CODE HERE ###
+
+```
+
+> YOUR ANSWER HERE
+
+
+## 2D
+What assumptions would we need to make if we wanted to include retained students in our analyses? How worried about bias in this setting are you? 
+
+```{r p2d}
+### YOUR CODE HERE ###
+
+```
+
+> YOUR ANSWER HERE
+
+# Question 3 Differentiation
+
+I have always had this pet theory that differentiating instruction is a really demanding teaching skill. If that were the case, we might imagine a scenario in which a class with more variation in abilities is harder to teach than a class with less variation (note: I’m talking about variances not means. Important!). 
+
+Let’s test this! [NOTE: No need to “answer” the parts of this question separately. Focus on answering the questions posed in C.]
+
+## 3A 
+Let’s start with an analysis of what there might be empirically.
+
+```{r}
+setwd("~/Documents/Code/educ452/lausd/") #change to your directory
+load("LA_nice_sub.Rdata") 
+ 
+##Let's first look at the empirical data
+ma<-df[df$subject=="MATHEMATICS",]
+m<-by(ma$scale_score_std_lag_1,ma$teacher_id,mean,na.rm=TRUE)
+m<-data.frame(teacher_id=names(m),lm=as.numeric(m))
+ma<-merge(ma,m)
+mod<-lmer(scale_score_std~scale_score_std_lag_1+lm+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
+te<-ranef(mod)$teacher_id
+te<-data.frame(teacher_id=rownames(te),te=te[,1])
+s<-by(ma$scale_score_std_lag_1,ma$teacher_id,sd,na.rm=TRUE)
+s<-data.frame(teacher_id=names(s),sd=as.numeric(s))
+x<-merge(te,s)
+
+plot(x$sd,x$te,pch=19,cex=.5)
+abline(lm(te~sd,x))
+cc<-cor(x$sd,x$te,use='p')
+cc
+
+```
+
+## 3B 
+Let’s simulate the kind of structure that I have in mind wherein teacher effectiveness varies across teachers but is centered on the SD of prior year abilities.
+```{r}
+##meh, not much going on, but let's turn to a different question: would we be able to detect it if true?
+setwd("~/Documents/Code/educ452/lausd/") #change to your directory
+load("LA_nice_sub.Rdata") 
+ma<-df[df$subject=="MATHEMATICS",]
+m<-by(ma$scale_score_std_lag_1,ma$teacher_id,mean,na.rm=TRUE)
+m<-data.frame(teacher_id=names(m),lm=as.numeric(m))
+ma<-merge(ma,m)
+sim<-function(ma,scale) { #note we are going to use `scale' to control whether teachers are more/less effective due to variation in SD of prior abilities
+    ma$scale_score_std<-NA
+    sd.error<-.55
+    sd.teacherfx<-.29
+    ##
+    s<-by(ma$scale_score_std_lag_1,ma$teacher_id,sd,na.rm=TRUE)
+    s<-data.frame(teacher_id=names(s),sd=as.numeric(s))
+    s$sd<-(s$sd-mean(s$sd,na.rm=TRUE))/sd(s$sd,na.rm=TRUE)
+    s<-s[!is.na(s$sd),]
+    ##here is where we build in the 'structure' that we are going to then investigate
+    te<-rnorm(nrow(s),
+              mean=scale*s$sd, #note scale
+              sd=sd.teacherfx)
+    te<-data.frame(teacher_id=s$teacher_id,te=te)
+    ma<-merge(ma,te)
+    ma$scale_score_std<-.7*ma$scale_score_std_lag_1+ma$te+rnorm(nrow(ma),mean=0,sd=sd.error)
+    ##
+    ma<-ma[!is.na(ma$scale_score_std_lag_1),]
+    mod<-lmer(scale_score_std~scale_score_std_lag_1+lm+in.title1+ell+join.after.k+factor(grade)+factor(year)+(1|teacher_id),ma)
+    te<-ranef(mod)$teacher_id
+    te<-data.frame(teacher_id=rownames(te),te=te[,1])
+    x<-merge(te,s)
+    cor(x$te,x$sd) #so i'm returning correlations of estimated teacher effects and class SD of prior abilities
+}
+for (scale in seq(-.25,.25,length.out=5)) print(c(scale,sim(ma=ma,scale=scale)))
+print("reminder of empirical results")
+print(cc)
+```
+
+## 3C
+What do you think about the viability of my pet theory in the LAUSD data? Could we detect this if it occurred? Do we?
+
+> YOUR ANSWER HERE
+
+## 3D Bonus [optional]
+Do you have a better idea for examining this issue? 
+
+```{r p3d}
+### YOUR CODE HERE ###
+
+```
+
+> YOUR ANSWER HERE
+
+# Question 4 Teaching Lifecycle
+
+When talking about the teacher lifecycle  [<https://docs.google.com/presentation/d/1wTaVmwK23ohSGfQlb8OL73ok4D0GgDrtMHB6IRCUSc8/edit#slide=id.g304b82a96db_0_0>], we noted that there were two processes that seemed to be causing trouble. We discussed one of them - censoring - in class. Let’s now think about the other. 
+
+## 4A
+Can you build a DGM such that teachers decision to quit after the first year is governed by an entirely different process relative to that decision after subsequent years (and after the first year it can be governed by the exponential model we discussed in class)? Can you build it such that you can vary how strong this propensity to quit after the first year is?
+
+```{r}
+### YOUR CODE HERE ###
+
+```
+
+> YOUR ANSWER HERE
+
+## 4B
+What kind of bias does this cause in estimates of lambda that come from fitting the naive exponential model? Ideally you can show how bias in lambda is varying as a function of the control parameter from (A)? 
+
+```{r}
+### YOUR CODE HERE ###
+
+```
+
+> YOUR ANSWER HERE
+
+
+# Session info
+
+Information about this R session including which version of R was used, and what packages were loaded.
+
+```{r sessinfo}
+sessionInfo()
+```
