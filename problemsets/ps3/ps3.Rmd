@@ -232,7 +232,7 @@ Do you have a better idea for examining this issue?
 When talking about the teacher lifecycle  [<https://docs.google.com/presentation/d/1wTaVmwK23ohSGfQlb8OL73ok4D0GgDrtMHB6IRCUSc8/edit#slide=id.g304b82a96db_0_0>], we noted that there were two processes that seemed to be causing trouble. We discussed one of them - censoring - in class. Let’s now think about the other. 
 
 ## 4A
-Can you build a DGM such that teachers decision to quit after the first year is governed by an entirely different process relative to that decision after subsequent years (and after the first year it can be governed by the exponential model we discussed in class)? Can you build it such that you can vary how strong this propensity to quit after the first year is?
+Can you build a DGM such that a teacher's decision to quit after the first year is governed by an entirely different process relative to that decision after subsequent years (and after the first year it can be governed by the exponential model we discussed in class)? Can you build it such that you can vary how strong this propensity to quit after the first year is?
 
 ```{r}
 ### YOUR CODE HERE ###
