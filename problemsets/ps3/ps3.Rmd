@@ -234,6 +234,11 @@ When talking about the teacher lifecycle  [<https://docs.google.com/presentation
 ## 4A
 Take the data and partition it such that you have teachers who quit after their first years and those who continue. Can you articulate a model that would lead to this distribution?
 
+```{r 4a}
+### YOUR CODE HERE ###
+
+```
+
 > YOUR ANSWER HERE
 
 ## 4B
