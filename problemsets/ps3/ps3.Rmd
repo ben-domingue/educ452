@@ -151,7 +151,7 @@ Let’s test this! [NOTE: No need to “answer” the parts of this question sep
 Let’s start with an analysis of what there might be empirically.
 
 ```{r}
-setwd("~/Documents/Code/educ452/lausd/") #change to your directory
+#setwd("~/Documents/Code/educ452/lausd/") #change to your directory
 load("LA_nice_sub.Rdata") 
  
 ##Let's first look at the empirical data
@@ -232,19 +232,14 @@ Do you have a better idea for examining this issue?
 When talking about the teacher lifecycle  [<https://docs.google.com/presentation/d/1wTaVmwK23ohSGfQlb8OL73ok4D0GgDrtMHB6IRCUSc8/edit#slide=id.g304b82a96db_0_0>], we noted that there were two processes that seemed to be causing trouble. We discussed one of them - censoring - in class. Let’s now think about the other. 
 
 ## 4A
-Can you build a DGM such that teachers decision to quit after the first year is governed by an entirely different process relative to that decision after subsequent years (and after the first year it can be governed by the exponential model we discussed in class)? Can you build it such that you can vary how strong this propensity to quit after the first year is?
-
-```{r}
-### YOUR CODE HERE ###
-
-```
+Take the data and partition it such that you have teachers who quit after their first years and those who continue. Can you articulate a model that would lead to this distribution?
 
 > YOUR ANSWER HERE
 
 ## 4B
-What kind of bias does this cause in estimates of lambda that come from fitting the naive exponential model? Ideally you can show how bias in lambda is varying as a function of the control parameter from (A)? 
+Going back to the number of years spent in the classroom, can you build a DGM such that a teacher's decision to quit after the first year is governed by what is in part A and the decision thereafter is driven by an exponential model similar to what we observed in class? What kind of bias does this cause in estimates of lambda that come from fitting the naive exponential model? 
 
-```{r}
+```{r 4b}
 ### YOUR CODE HERE ###
 
 ```
