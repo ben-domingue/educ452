@@ -3,10 +3,10 @@ title: "EDUC 452 PS3"
 author: "###Your name goes here###"
 date: "`r Sys.time()`"
 output:
-  pdf_document:
-    number_sections: true
   html_document:
     df_print: paged
+  pdf_document:
+    number_sections: true
 urlcolor: blue
 editor_options: 
   markdown: 
