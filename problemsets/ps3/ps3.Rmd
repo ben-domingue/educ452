@@ -3,10 +3,10 @@ title: "EDUC 452 PS3"
 author: "###Your name goes here###"
 date: "`r Sys.time()`"
 output:
-  html_document:
-    df_print: paged
   pdf_document:
     number_sections: true
+  html_document:
+    df_print: paged
 urlcolor: blue
 editor_options: 
   markdown: 
@@ -32,7 +32,7 @@ options(dplyr.summarise.inform = FALSE)
 
 We observe fairly high correlations (r=0.76, see here) of teacher effects across reading and math. 
 ```{r}
-setwd("~/Documents/Code/educ452/lausd/") #set your own directory
+setwd("/home/bdomingu/Dropbox/stanford/classes/edu452/data") ##set your own directory
 load("LA_nice_sub.Rdata") 
  
 library(lme4)
@@ -70,7 +70,7 @@ If you look at the code prep [<https://github.com/ben-domingue/educ452/blob/main
 We might be worried about this. Let’s explore it! How would you describe the potential bias introduced there (i.e., describe to me what you are observing as a function of increases in the delta argument)?
 
 ```{r}
-#setwd("~/Documents/Code/educ452/lausd/") #change to your directory
+setwd("/home/bdomingu/Dropbox/stanford/classes/edu452/data") ##set your own directory
 load("LA_nice_sub.Rdata") 
 
 ####################################################################
@@ -151,7 +151,7 @@ Let’s test this! [NOTE: No need to “answer” the parts of this question sep
 Let’s start with an analysis of what there might be empirically.
 
 ```{r}
-#setwd("~/Documents/Code/educ452/lausd/") #change to your directory
+setwd("/home/bdomingu/Dropbox/stanford/classes/edu452/data") ##set your own directory
 load("LA_nice_sub.Rdata") 
  
 ##Let's first look at the empirical data
@@ -177,7 +177,7 @@ cc
 Let’s simulate the kind of structure that I have in mind wherein teacher effectiveness varies across teachers but is centered on the SD of prior year abilities.
 ```{r}
 ##meh, not much going on, but let's turn to a different question: would we be able to detect it if true?
-setwd("~/Documents/Code/educ452/lausd/") #change to your directory
+setwd("/home/bdomingu/Dropbox/stanford/classes/edu452/data") ##set your own directory
 load("LA_nice_sub.Rdata") 
 ma<-df[df$subject=="MATHEMATICS",]
 m<-by(ma$scale_score_std_lag_1,ma$teacher_id,mean,na.rm=TRUE)
