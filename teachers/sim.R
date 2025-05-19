@@ -1,3 +1,9 @@
+x<-read.csv("OK_Payroll.csv") #https://osf.io/v2rgb
+x<-x[x$teacher & x$year==2020,]
+N<-nrow(x)
+library(MASS)
+mod <- fitdistr(x$experience_total, "exponential") ###need to interpret this estimate
+
 par(mfrow=c(1,2),mgp=c(2,1,0),mar=c(3,3,1,1))
 hist(x$experience_total, freq = FALSE,breaks=50)
 curve(dexp(x, rate =mod$estimate), from = 0, col = "red", add = TRUE)
@@ -14,21 +20,20 @@ for (i in 1:100) {
     del<-y1-y0
     c1<-coef(fitdistr(del, "exponential"))
     ##
-    del.c<-ifelse(y1<=obs.year,y1-y0,obs.year-y0)
+    del.c<-ifelse(y1<=obs.year,y1-y0,obs.year-y0) ##censoring
     c2<-coef(fitdistr(del.c, "exponential"))
     out[[i]]<-c(c1,c2)
 }
 z<-do.call("rbind",out)
-plot(z)
+plot(z,xlab='uncensored',ylab='censored')
 m<-lm(z[,1]~z[,2])
 
 ##if we edit `obs.year<-2020` to use 2010 (while leaving `min=1980`), what will happen to coef(m)[2]? what happens if obs.year is replaced with 2030? 2050?
 
 
 par(mfrow=c(1,2),mgp=c(2,1,0),mar=c(3,3,1,1))
-plot(del,del.c)
+plot(del,del.c,xlab='true lifespan',ylab='censored')
 hist(del.c, freq = FALSE,breaks=50)
-#lines(density(del))
 m1<-fitdistr(del.c, "exponential")
 curve(dexp(x, rate =m1$estimate), from = 0, col = "red", add = TRUE,lty=2)
 m0<-fitdistr(del, "exponential")
