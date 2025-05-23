@@ -1,5 +1,6 @@
 ## simulating data from the Rasch model
 simest<-function(np,ni=25) { 
+    library(mirt)
     rmse<-function(x,y) sqrt(mean((x-y)^2))
     th<-rnorm(np)
     b<-rnorm(ni)
@@ -8,12 +9,12 @@ simest<-function(np,ni=25) {
     resp<-p
     for (i in 1:ncol(resp)) resp[,i]<-rbinom(np,1,p[,i])
     resp<-data.frame(resp)
-    m1<-mirt::mirt(resp,1,'Rasch')
+    m1<-mirt(resp,1,'Rasch')
     b.est<-coef(m1,simplify=TRUE,IRTpars=TRUE)$item[,2]
     rmse(b,b.est)
 }
 
-N<-10^(runif(25,2,4))
+N<-10^(runif(50,2,4))
 N<-sort(round(N)) #sorting is handy for visualization
 library(parallel)
 nc<-10 ##you will need to set this for your machine
