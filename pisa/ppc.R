@@ -15,7 +15,7 @@ sim<-function(m) {
     pv<-1/(1+exp(-z))
     test<-matrix(runif(nrow(th)*nrow(co)),nrow=nrow(th),ncol=nrow(co)) #a different way of simulating bernoulli random variables
     resp<-test
-    resp<-ifelse(pv>test,1,0) #converting the matrix of probabilities to a matrix of ritem responses
+    resp<-ifelse(pv>test,1,0) #converting the matrix of probabilities to a matrix of item responses
     resp
 }
 
@@ -35,5 +35,5 @@ for (i in 1:100) {
 }
 x<-do.call("rbind",L)
 
-boxplot(x,ylim=c(0,1))
+boxplot(x,ylim=c(0,1),names=seq(.1,.5,by=.1))
 points(1:5,x.true,pch=19,cex=2,col='red')
