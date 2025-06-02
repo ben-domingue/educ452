@@ -6,7 +6,7 @@ resp<-resp[sample(1:nrow(resp),25000),] #take a subsample
 m<-mirt(resp,1,"2PL",technical=list(NCYCLES=10000)) #first estimate the item response model
 th<-fscores(m) #now estimate abilities
 
-sim<-function(m) {
+sim<-function(m,th) {
     co<-coef(m)
     co<-co[-length(co)]
     co<-do.call("rbind",co) #item parameters
@@ -30,7 +30,7 @@ x.true<-f(tau=seq(.1,.5,by=.1),resp)
 
 L<-list()
 for (i in 1:100) {
-    z<-sim(m)
+    z<-sim(m,th)
     L[[i]]<-f(tau=seq(.1,.5,by=.1),z)
 }
 x<-do.call("rbind",L)
