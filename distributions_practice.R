@@ -58,5 +58,5 @@ err.var<-1
 y<-b*x+rnorm(length(x),mean=0,sd=err.var)
 lm(y~x)
 
-##QQ. Can you generate a binary variable x and use it to produce a continuous outcome y as above. Can you still recover the key regression coefficient b?
-##QQ. Can you generate a categorical variable x (using rmultinom) and use it to produce a continuous outcome (that you then analyze with regresion)?
+##QQ. Can you generate a binary variable x and use it to produce a continuous outcome y as above. How are x and the outcome correlated? Can you control the level of correlation? 
+##QQ. Can you generate a categorical variable x (using rmultinom) and use it to produce a continuous outcome? What is different in this case relative to the case of binary x?
