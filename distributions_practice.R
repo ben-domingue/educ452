@@ -50,7 +50,7 @@ hist(x[x[,2]<0,][,1],xlim=c(-4,4))
 
 ##################################################################################################
 ##now let's put a few things together to see some basic regression examples based on drawing from distributions
-x<-rnorm(10000) #this will be the IV
+x<-rnorm(10000) #this will be the independent variable
 
 ##let's first consider how we can use x to generate a continuous outcome using the standard linear model
 b<-1
