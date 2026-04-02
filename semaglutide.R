@@ -1,5 +1,4 @@
-f<-function(delta,N=25) {
-    r<- 0.5
+f<-function(delta,N=25,r=0.5) {
     library(MASS)
     xx<-mvrnorm(N,mu=rep(0,2),Sigma=matrix(c(1,r,r,1),2,2))
     gr<-c(rep(0,N),rep(1,N))
@@ -24,7 +23,8 @@ for (delta in deltas) {
 }
 pow<-do.call("rbind",pow)
 
-plot(deltas,pow[,1])
+par(mfrow=c(1,2),mgp=c(2,1,0),mar=c(3,3,1,1),oma=rep(.5,4))
+plot(deltas,pow[,1],xlab='delta(N=50)',ylab='power')
 lines(deltas,pow[,2],lty=2)
 
 
@@ -38,5 +38,5 @@ for (N in 1:5) {
 }
 z<-do.call("rbind",out)
 
-plot(z[,2],z[,1],pch=NA,xlim=0:1,ylim=0:1)
+plot(z[,2],z[,1],pch=NA,xlim=0:1,ylim=0:1,main='delta=0.5',ylab='power w cov',xlab='power wo cov'); abline(0,1)
 text(z[,2],z[,1],rownames(z))
