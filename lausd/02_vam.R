@@ -19,7 +19,7 @@ fm<-"scale_score_std~scale_score_std_lag_1+in.title1+ell+join.after.k+factor(gra
 tmp<-ma[,all.vars(as.formula(fm))]
 ma<-ma[rowSums(is.na(tmp))==0,]
 fm2<-as.formula(paste(fm,"|teacher_id",sep=""))
-mod<-feols(fm2,ma)
+mod<-feols(fm2,ma,fixef.rm='none')
 
 eb<-function(x) {
     aggregate(x$res,list(x$id),sd)->out
@@ -46,3 +46,5 @@ va<-eb(x)[,c("id","eb")]
 sd(va$eb,na.rm=TRUE) #0.28, not far from 0.297 in study
 
 z<-merge(re,va,by.x=0,by.y=1)
+plot(z[,-1]);abline(0,1,col='red')
+
