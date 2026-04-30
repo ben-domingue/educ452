@@ -81,4 +81,4 @@ for (sd.me in seq(0,1,by=.25)) {
 }
 
 do.call("rbind",unadjusted)
-do.call("rbind",adjusted)
+do.call("rbind",adjusted) ##what do you think about the IV fix when we have straightforward measurement error?
