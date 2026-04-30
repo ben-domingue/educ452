@@ -27,6 +27,8 @@ for (i in 1:100) {
 z<-do.call("rbind",out)
 plot(z,xlab='uncensored',ylab='censored')
 m<-lm(z[,1]~z[,2])
+legend("topleft",bty='n',legend="lambda estimates")
+
 
 ##if we edit `obs.year<-2020` to use 2010 (while leaving `min=1980`), what will happen to coef(m)[2]? what happens if obs.year is replaced with 2030? 2050?
 
