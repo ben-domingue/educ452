@@ -21,6 +21,6 @@ nc<-10 ##you will need to set this for your machine
 z<-mclapply(N,simest,mc.cores=nc)
 
 err<-unlist(z)
-plot(N,err,pch=19,col='gray',cex=.5,ylim=c(0,max(err)))
+plot(N,err,pch=19,col='gray',cex=.5,ylim=c(0,max(err)),xlab='N people',ylab='RMSE item parameters')
 m<-loess(err~N)
 lines(N,m$fitted)
