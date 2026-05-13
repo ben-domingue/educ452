@@ -19,22 +19,20 @@ sim<-function(m,th) {
     resp
 }
 
-f<-function(tau=.1,resp) {
-    ss<-rowMeans(resp,na.rm=TRUE)
-    z<-resp[ss<tau,]
-    cm<-colMeans(z,na.rm=TRUE)
-    max(cm)
+f<-function(x) {
+    ss<-rowMeans(x,na.rm=TRUE)
+    coors<-numeric()
+    for (i in 1:ncol(x)) coors[i]<-cor(x[,i],ss,use='p')
+    coors
 }
-f<-Vectorize(f,'tau')
-x.true<-f(tau=seq(.1,.5,by=.1),resp)
 
 L<-list()
-for (i in 1:100) {
+for (i in 1:10) {
     z<-sim(m,th)
-    L[[i]]<-f(tau=seq(.1,.5,by=.1),z)
+    L[[i]]<-f(z)
 }
 x<-do.call("rbind",L)
 
-boxplot(x,ylim=c(0,1),names=seq(.1,.5,by=.1))
-points(1:5,x.true,pch=19,cex=2,col='red')
+boxplot(x,xlab='item',ylab='cor(item,average)')
+points(1:ncol(x),f(resp),col='red',pch=19,cex=1)
 
