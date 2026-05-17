@@ -1,0 +1,227 @@
+---
+title: "EDUC 452 PS4"
+author: "###Your name goes here###"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    df_print: paged
+  pdf_document:
+    number_sections: true
+urlcolor: blue
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r setup, include=FALSE}
+# load packages
+library("knitr")
+library("tidyverse")
+
+# use a nicer plotting theme theme
+theme_set(theme_classic())
+
+# disable warnings about grouping
+options(dplyr.summarise.inform = FALSE)
+```
+
+> This homework is due by **Friday, Jun. 6th, 8:00am**.
+> Upload a html file to Canvas called `ps4.html`
+> I know it’s a busy time of the year, so you can choose just one of the below to submit. Please also see the ‘independent’ assignment which will need to be submitted independently.
+
+# Question 1 
+Given that the core requirement of PISA data is that it produces decent country-level ability estimates, let’s examine that. The code considers estimates using multiple-group ability estimates for each country and then “checks” this approach using simulation. 
+```{r}
+load("~/Documents/Code/EDUC452_ta/pisa2018math_df.Rdata") ##https://www.dropbox.com/s/380xamew0bkrvf9/pisa2018math_df.Rdata?dl=0
+
+##let's just use a sample of items and countries
+items<-unique(df$item)
+df<-df[df$item %in% items[1:30],]
+countries<-c("POL","JPN","COL","SWE","PER","THA","USA","FRA")
+df<-df[df$country %in% countries,]
+##and a sample of respondents
+L<-split(df,df$country)
+f<-function(x) sample(unique(x$id),500)
+ids<-sapply(L,f)
+df<-df[df$id %in% as.numeric(ids),]
+df$id<-paste(df$id,df$country,sep="--") #let's add the country to the id just to have it handy
+
+##first need to make item response data
+makeresponse<-function(df) {
+    ids<-sort(unique(df$id))
+    L<-split(df,df$item)
+    resp<-list()
+    for (i in 1:length(L)) {
+        x<-L[[i]]
+        test<-ids %in% x$id
+        mat.empty<-data.frame(cbind(ids[!test],NA))
+        names(mat.empty)<-c("id","resp")
+        mat<-rbind(x[,c("id","resp")],mat.empty)
+        index<-match(ids,mat$id)
+        mat<-mat[index,]
+        resp[[i]]<-mat[,2]
+    }
+    resp<-data.frame(do.call("cbind",resp))
+    for (i in 1:ncol(resp)) resp[,i]<-as.numeric(resp[,i])
+    rownames(resp)<-ids
+    resp
+}
+resp<-makeresponse(df)
+
+##now let's look at multiple-group estimates for the empirical data
+library(mirt)
+cc<-strsplit(rownames(resp),"--")
+cc<-sapply(cc,"[",2) #get countries for respondents
+m <- multipleGroup(resp, 1, group = cc,
+                                   invariance=c('slopes', 'intercepts','free_means','free_variances'))
+co<-coef(m)
+groups<-sapply(co,function(x) x[length(x)][[1]])
+empirical.estimates<-sort(groups[1,])
+
+##Let's now experiment with a simulation wherein we simulate item response data with the empirical structure (e.g., sparseness) and see how well we can do in terms of recovering mean-abilities for the countries we simulate
+df0<-df
+
+items<-unique(df$item)
+items<-data.frame(item=items,diff=rnorm(length(items)),disc=exp(rnorm(length(items),sd=.25)))
+df<-merge(df,items)
+##let's now add hierchical abilities
+country<-unique(df$country)
+country<-data.frame(country=country,avg=rnorm(length(country)))
+df<-merge(df,country)
+df$th<-rnorm(nrow(df),mean=df$avg,sd=1)
+k<-df$disc*(df$th-df$diff)
+df$p<-1/(1+exp(-k))
+df$resp<-rbinom(nrow(df),1,df$p)
+resp<-makeresponse(df)
+cc<-strsplit(rownames(resp),"--")
+cc<-sapply(cc,"[",2) #get countries for respondents
+library(mirt)
+m <- multipleGroup(resp, 1, group = cc,
+                                   invariance=c('slopes', 'intercepts','free_means','free_variances'))
+co<-coef(m)
+groups<-sapply(co,function(x) x[length(x)][[1]])
+tmp<-data.frame(country=colnames(groups),est=groups[1,])
+tmp<-merge(country,tmp)
+par(mfrow=c(1,1),mgp=c(2,1,0),mar=c(3,3,1,1))
+plot(tmp$avg,tmp$est,xlab='truth country',ylab='estimated country'); abline(0,1) 
+
+##So, how would you assess the quality of the below estimates?
+empirical.estimates
+```
+## 1A
+If you wanted to vary the structure of the parameters used in the item response models (e.g., what if you wanted to make the items really hard?), how might you do that? If we were to make the items much more difficult, what implications would you anticipate in terms of resulting ‘noise’ in estimation of country-level abilities?
+
+```{r p2c}
+### YOUR CODE HERE ###
+
+```
+
+> YOUR ANSWER HERE
+
+## 1B 
+
+To keep things computationally feasible, I kept the sample sizes really low. Ignoring that, we still get some simulation evidence about the degree to which we can recover abilities in this limited-data context. What do you think of our empirical estimates given that simulation evidence? How does this simulation make you feel about the PISA country-level estimates?
+
+> YOUR ANSWER HERE 
+
+Note for #1 [just for fun, nothing from you required]: That this was quite computationally expensive. An alternative approach to multigroup estimation is “linking” (via something like Stocking-Lord [<https://journals.sagepub.com/doi/10.1177/014662168300700208>]) wherein you leverage the assumption that items perform equivalently across groups (but recall our DIF discussion!) to map ability estimates for different groups onto a common scale.
+
+
+# Bonus Question
+
+Who wants to talk about guessing!! In the 3PL, the basic assumption is that there is a lower asymptote on item response functions. What that means is complicated, one interpretation is in the text around Figure 1 [<https://www.dropbox.com/scl/fi/m7ab65zszn77iuyj7ryb1/SanMartin.pdf?rlkey=l52qra10gcw63z95wuwgf8j33&e=1&dl=0>] here (NOTE: this link is provided for your reference, don’t feel the need to read it extensively). Let’s instead think about guessing as a person-level phenomenon and see what results in terms of bias in ability estimates when we ignore it via estimation from the 2PL. Code is here.
+
+```{r}
+#we'll use this file downstream. available at: https://www.dropbox.com/s/07i1gmqk082ribt/pisa_resp.Rdata?dl=0
+load("~/Documents/Code/EDUC452_ta/pisa_resp.Rdata")
+
+library(mirt)
+index<-sample(1:nrow(resp),10000)
+resp<-resp[index,]
+m<-mirt(resp,1,"2PL")
+th<-sort(fscores(m)[,1]) #sorting will make it easier for subsequent visualization
+co<-coef(m,IRTpars=TRUE)
+co<-co[-length(co)]
+co<-do.call("rbind",co) #item parameters
+
+##Let's first simulate data the 'standard' way
+sim.noguess<-function(th,co) {#this will simulate item responses, estimate irt models, and return abilities based on th and co
+    z<-outer(th,co[,2],"-")
+    z<-z+matrix(rep(co[,2],length(th)),byrow=TRUE,ncol=nrow(co),nrow=length(th))
+    pv<-1/(1+exp(-z))
+    test<-matrix(runif(length(th)*nrow(co)),nrow=length(th),ncol=nrow(co)) #a different way of simulating bernoulli random variables
+    resp<-ifelse(pv>test,1,0) #converting the matrix of probabilities to a matrix of ritem responses
+    resp<-data.frame(resp)
+    m<-mirt(resp,1,"2PL")
+    fscores(m)
+}
+
+##Now let's simulate guessing such that it is a person-level feature with some unique characteristics
+sim.guess<-function(th,co,floor=.2,beta=.5) {
+    test<-beta*th+rnorm(length(th))
+    guesser<-ifelse(test>0,1,0)
+    z<-outer(th,co[,2],"-")
+    z<-z+matrix(rep(co[,2],length(th)),byrow=TRUE,ncol=nrow(co),nrow=length(th))
+    pv<-1/(1+exp(-z))
+    for (i in 1:ncol(pv)) pv[,i]<-ifelse(pv[,i]<floor & guesser==1,floor,pv[,i]) ##the key bit
+    test<-matrix(runif(length(th)*nrow(co)),nrow=length(th),ncol=nrow(co)) 
+    resp<-ifelse(pv>test,1,0) 
+    resp<-data.frame(resp)
+    m<-mirt(resp,1,"2PL")
+    fscores(m)
+}
+
+th.ng<-sim.noguess(th,co)
+th.g<-sim.guess(th,co)
+
+##let's look for bias in the estimates that don't account for guessing
+del0<-th.ng-th
+del<-th.g-th
+m<-loess(del0~th)
+tmp<-cbind(m$x,m$fitted)
+plot(tmp,type='l',ylim=c(-1,1)); abline(h=0,col='gray')
+m<-loess(del~th)
+tmp<-cbind(m$x,m$fitted)
+lines(tmp,col='red',lwd=2)
+
+##Let's look at how this might change as a function of beta
+par(mfrow=c(1,3),mgp=c(2,1,0),mar=c(3,3,2,1))
+for (beta in c(-1,0,1)) {
+    th.g<-sim.guess(th,co,beta=beta)
+    del<-th.g-th
+    m<-loess(del0~th)
+    tmp<-cbind(m$x,m$fitted)
+    plot(tmp,type='l',ylim=c(-1,1)); abline(h=0,col='gray')
+    m<-loess(del~th)
+    tmp<-cbind(m$x,m$fitted)
+    lines(tmp,col='red',lwd=2)
+    mtext(side=3,line=0,paste0('beta=',beta))
+}
+```
+
+## Bonus A 
+Look for “##the key bit” in the sim.guess() function. How am I conceptualizing guessing? What is the role of floor and beta?
+
+> YOUR ANSWER HERE
+
+
+## Bonus B
+In the final figure that gets created, how would you characterize the bias? 
+
+> YOUR ANSWER HERE
+
+## Bonus C
+How reasonable do you think the model I’ve set up for guessing is? Do you think values of beta above or below zero are more reasonable?  [Note: this question is subjective in the sense that it really relies upon how you conceptualize human behavior.]
+
+> YOUR ANSWER HERE
+
+
+That's all! Thank you for engaging the 4 problem sets :) Have a wonderful summer! 
+
+# Session info
+
+Information about this R session including which version of R was used, and what packages were loaded.
+
+```{r sessinfo}
+sessionInfo()
+```
